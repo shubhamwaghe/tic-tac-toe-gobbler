@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import logo from './logo.svg';
+import Navbar from './components/Navbar';
+import SideNav from './components/SideNav';
 import Game from './components/Game';
+import GobblerGame from './components/GobblerGame';
+import About from './components/About';
+import { Route, Routes } from 'react-router-dom';
+import { KeepAlive } from 'react-keep-alive';
 import './App.css';
 
 function App() {
@@ -33,8 +38,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <Game />
+        <Navbar />
       </header>
+      <SideNav />
+        <Routes>
+          <Route path="/" element={ <KeepAlive name="GobblerGame"><GobblerGame /></KeepAlive> } />
+          <Route path="/about" element={ <About/> } />
+        </Routes>
     </div>
   );
 
