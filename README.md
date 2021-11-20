@@ -1,4 +1,4 @@
-# create-react-app with a Node server on Heroku
+# Tic Tac Toe Gobbler
 
 A minimal example of using a Node backend (server for API, proxy, & routing) with a [React frontend](https://github.com/facebookincubator/create-react-app).
 
@@ -27,6 +27,8 @@ A combo of two npm projects, the backend server and the frontend UI. So there ar
 Includes a minimal [Node Cluster](https://nodejs.org/docs/latest-v8.x/api/cluster.html) [implementation](server/index.js) to parallelize the single-threaded Node process across the available CPU cores.
 
 ## Demo
+
+### Tic Tac Toe Gobbler - [Demo](https://tic-tac-toe-gobbler.herokuapp.com/)
 
 [Demo deployment](https://cra-node.herokuapp.com/): example API call from the React UI is [fetched with a relative URL](react-ui/src/App.js#L16) that is served by an Express handler in the Node server.
 
