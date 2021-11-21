@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
-import SideNav from './components/SideNav';
+import Navbar from './components/section/Navbar';
+import SideNav from './components/section/SideNav';
 import Game from './components/Game';
 import GobblerGame from './components/GobblerGame';
-import About from './components/About';
+import About from './components/section/About';
 import { Route, Routes } from 'react-router-dom';
 import { KeepAlive } from 'react-keep-alive';
 import './App.css';

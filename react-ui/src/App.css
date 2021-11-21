@@ -74,6 +74,18 @@
   margin: 0 auto;  
  }
 
+/* Pieces */
+.piece-image {
+  width: 60px;
+}
+
+
+
+
+
+
+
+
 .game-heading {
   color: #f2f2f2;
 }

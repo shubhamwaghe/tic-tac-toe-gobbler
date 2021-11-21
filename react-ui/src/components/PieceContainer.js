@@ -27,25 +27,11 @@ export default function PieceContainer({ name, pieces, movePiece }) {
           ref={drop}
           style={{
             position: 'relative',
-            width: '150px',
+            width: '400px',
             height: '80px',
             backgroundColor: '#f5ffea'
           }}
         >
-        {console.log("Pieces:", pieces)}
-{/*        { pieces.forEach(pieceName => (
-          <li key={pieceName} >  
-          <Piece pieceName = {pieceName} position = "BLUE_GROUND" movePiece={ movePiece } />
-            {pieceName}  
-          </li>  
-        ))}*/}
-
-{/*        { pieces.forEach(piece => (
-          <li key={piece.pieceName} >  
-            piece
-          </li>  
-        ))}*/}
-
           { pieces }
         </div>
     )

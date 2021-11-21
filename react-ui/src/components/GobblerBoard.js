@@ -20,9 +20,7 @@ export default class GobblerBoard extends Component {
 
     renderContainerPieces(containerName) {
         return this.props.squares[containerName].map(pieceName => (
-          <li key={pieceName} >  
               <Piece pieceName = {pieceName} position = {containerName} movePiece={this.props.movePiece} />
-          </li>  
         ))
     }
 

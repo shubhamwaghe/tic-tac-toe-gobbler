@@ -67,7 +67,17 @@ export default class GobblerGame extends Component {
     }
 
     assertMovableToPiecePosition(pieceName, targetPosition) {
+        const currentSizeTag = pieceName.substring(1,2); // Gives : 'S' / 'M' / 'L'
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        var current = history[history.length - 1];
+        if (current.squares[targetPosition].length === 0 ) return true;
+
+        const targetSizeTag = current.squares[targetPosition].at(-1).substring(1,2);
+        if (currentSizeTag == 'S') return false; // Small cannot move over any piece
+        if (currentSizeTag == 'M' && ['M', 'L'].includes(targetSizeTag)) return false; // Medium cannot move over Medium, Large
+        if (currentSizeTag == 'L' && targetSizeTag == 'L') return false; // Large cannot move over Large
         return true;
+
     }
 
     alertUser(message) {
@@ -75,9 +85,9 @@ export default class GobblerGame extends Component {
     }
 
     movePiece(pieceName, currentPosition, targetPosition) {
-        if (currentPosition === targetPosition) return this.alertUser('No movement done!');
-        if(!this.assertMovableFromPiecePosition(pieceName, currentPosition)) return this.alertUser('Illegal Move! Another piece is over it!');
-        if(!this.assertMovableToPiecePosition(pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move over larger piece!');
+        if (currentPosition === targetPosition) return;
+        if(!this.assertMovableFromPiecePosition(pieceName, currentPosition)) return this.alertUser('Illegal Move! Invisible Piece!');
+        if(!this.assertMovableToPiecePosition(pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move over similar/larger piece!');
 
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         console.log("History: ", history);
@@ -116,9 +126,9 @@ export default class GobblerGame extends Component {
                     movePiece={(pieceName, currentPosition, targetPosition) => this.movePiece(pieceName, currentPosition, targetPosition)}
                     squares={current.squares} isRest={this.state.isRest} />
                 </div>
-                <div className="game-info">
+{/*                <div className="game-info">
                     <button onClick={ () => this.testButton(this.state) }>Test</button>
-                </div>
+                </div>*/}
             </div>
         )
     }
