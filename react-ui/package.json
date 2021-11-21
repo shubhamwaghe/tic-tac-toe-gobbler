@@ -5,6 +5,8 @@
   "dependencies": {
     "autoprefixer": "^9.8.8",
     "react": "^16.8.6",
+    "react-dnd": "^14.0.4",
+    "react-dnd-html5-backend": "^14.0.2",
     "react-dom": "^16.8.6",
     "react-keep-alive": "^2.5.2",
     "react-router-dom": "^6.0.2",
