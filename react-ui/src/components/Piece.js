@@ -19,6 +19,17 @@ export default function Piece({ pieceName, position, movePiece }) {
           case 'BS': return bluesmall;
           case 'BM': return bluemedium;
           case 'BL': return bluelarge;
+          default: return;
+        }
+    }
+
+    function getPieceSizeClassName() {
+        const sizeTag = pieceName.substring(1,2);
+        switch (sizeTag) {
+            case 'S': return 'piece-small';
+            case 'M': return 'piece-medium';
+            case 'L': return 'piece-large';
+            default: return;
         }
     }
 
@@ -46,7 +57,7 @@ export default function Piece({ pieceName, position, movePiece }) {
 
     return (
 
-        <img src={getPieceImage()} ref={drag} className="piece-image" alt="Piece" style={{
+        <img src={getPieceImage()} ref={drag} className={`piece-image ${getPieceSizeClassName()}`}  alt="Piece" style={{
             opacity: isDragging ? 0.5 : 1,
             fontSize: 25,
             fontWeight: 'bold',

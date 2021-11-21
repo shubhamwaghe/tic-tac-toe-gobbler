@@ -13,8 +13,8 @@ export default class GobblerGame extends Component {
                     'A3' : [], 'B3' : [], 'C3' : [],
                     'A2' : [], 'B2' : [], 'C2' : [],
                     'A1' : [], 'B1' : [], 'C1' : [],
-                    'RED_GROUND': ['RS1'],
-                    'BLUE_GROUND': ['BS1']
+                    'RED_GROUND': ['RS1', 'RM1', 'RL1', 'RS2', 'RM2', 'RL2'],
+                    'BLUE_GROUND': ['BS1', 'BM1', 'BL1', 'BS2', 'BM2', 'BL2'],
                 }
             }]
         }
@@ -63,7 +63,12 @@ export default class GobblerGame extends Component {
     assertMovableFromPiecePosition(pieceName, currentPosition) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         var current = history[history.length - 1];
-        return current.squares[currentPosition].at(-1) == pieceName;
+        console.log("CURRENT: ", current);
+
+        if(['BLUE_GROUND', 'RED_GROUND'].includes(currentPosition)) return true;
+        
+        const currentPositionPieces = current.squares[currentPosition];
+        return currentPositionPieces.at(-1) === pieceName;
     }
 
     assertMovableToPiecePosition(pieceName, targetPosition) {
@@ -73,9 +78,11 @@ export default class GobblerGame extends Component {
         if (current.squares[targetPosition].length === 0 ) return true;
 
         const targetSizeTag = current.squares[targetPosition].at(-1).substring(1,2);
-        if (currentSizeTag == 'S') return false; // Small cannot move over any piece
-        if (currentSizeTag == 'M' && ['M', 'L'].includes(targetSizeTag)) return false; // Medium cannot move over Medium, Large
-        if (currentSizeTag == 'L' && targetSizeTag == 'L') return false; // Large cannot move over Large
+        if (currentSizeTag === 'S') return false; // Small cannot move over any piece
+        if (currentSizeTag === 'M' && ['M', 'L'].includes(targetSizeTag)) return false; // Medium cannot move over Medium, Large
+        if (currentSizeTag === 'L' && targetSizeTag === 'L') return false; // Large cannot move over Large
+
+        console.log("CURRENT: ", current);
         return true;
 
     }

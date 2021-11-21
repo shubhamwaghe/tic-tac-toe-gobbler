@@ -1,14 +1,8 @@
 import React from 'react'
-import Piece from './Piece'
-// import { canMoveKnight, moveKnight } from './Game'
 
 import { useDrop } from 'react-dnd'
 
-export default function PieceContainer({ name, pieces, movePiece }) {
-
-    // renderPiece(pieceName, currentPieceContainer){
-    //     return <Piece pieceName = {pieceName} position = {currentPieceContainer} movePiece={this.props.movePiece} />
-    // }
+export default function PieceContainer({ name, pieces, containerType, movePiece }) {
 
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
         name: name,
@@ -25,12 +19,7 @@ export default function PieceContainer({ name, pieces, movePiece }) {
     return (
         <div
           ref={drop}
-          style={{
-            position: 'relative',
-            width: '400px',
-            height: '80px',
-            backgroundColor: '#f5ffea'
-          }}
+          className={containerType}
         >
           { pieces }
         </div>
