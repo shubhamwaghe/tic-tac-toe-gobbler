@@ -94,16 +94,91 @@
 .game-heading {
   color: #f2f2f2;
 }
- /* Game Info */
-ul {
-  padding-left: 30px;
- }
- .game-info {
-  margin-left: 20px;
- }
- .status {
-  margin-bottom: 10px;
- }
+
+.game-info {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-player {
+  font-size: 24px;
+}
+
+.info-move {
+  margin-top: 30px;
+}
+
+.move-list { 
+  padding: 0px;
+  list-style-type:none;
+  max-height: 325px;
+  overflow: scroll;
+}
+
+.move-list li {
+  padding: 5px 0px;
+  display: flex;
+}
+
+.move-button {
+  background-color: #13aa52;
+  font-size: 12px;
+  width: 135px;
+  border: 1px solid #13aa52;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  outline: 0;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.move-button:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  /*background-color: #13aa52;*/
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .move-button {
+    padding: 6px 14px;
+  }
+}
+
+.terminal-move-button {
+  background-color: #fa6400;
+}
+
+.blue-move-button {
+  background-color: #2c88d9;
+}
+
+.red-move-button {
+  background-color: #d3445b;
+}
+
+.badge-button {
+  background-color: crimson;
+  color: white;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  border-radius: 50%;
+  width: 30px;
+  margin-left: 6px;
+}
+
+.badge-button-hidden {
+  visibility: hidden;
+}
 
 /* The navigation bar */
 .navbar {
@@ -187,6 +262,75 @@ ul {
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+
+.sunglasses-img {
+  margin-top: 12px;
+  display: grid;
+  height: 50px;
+}
+
+.restart-btn-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.restart-btn {
+  position: relative;
+  top: 0px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-decoration: none;
+  font-size: 25px;
+  background: #f7f7f7;
+  padding: 15px 50px;
+  border: 1px solid #c4c4c4;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 5px 0px #c4c4c4;
+  -moz-box-shadow: 0px 5px 0px #c4c4c4;
+  -ms-box-shadow: 0px 5px 0px #c4c4c4;
+  -o-box-shadow: 0px 5px 0px #c4c4c4;
+  box-shadow: 0px 5px 0px #c4c4c4;
+  color: #222;
+  text-shadow: 1px 1px 1px #fff;
+  -webkit-transition: All 250ms ease;
+  -moz-transition: All 250ms ease;
+  -o-transition: All 250ms ease;
+  -ms-transition: All 250ms ease;
+  transition: All 250ms ease;
+}
+/*==========  Active State  ==========*/
+.restart-btn:active {
+  position: relative;
+  top: 5px;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -ms-box-shadow: none !important;
+  -o-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-transition: All 250ms ease;
+  -moz-transition: All 250ms ease;
+  -o-transition: All 250ms ease;
+  -ms-transition: All 250ms ease;
+  transition: All 250ms ease;
+}
+
+.restart-btn.navy {
+  background: #1b486d;
+  border: 1px solid #07121b;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 5px 0px #07121b;
+  -moz-box-shadow: 0px 5px 0px #07121b;
+  -ms-box-shadow: 0px 5px 0px #07121b;
+  -o-box-shadow: 0px 5px 0px #07121b;
+  box-shadow: 0px 5px 0px #07121b;
+  color: #fff;
+  text-shadow: 1px 1px 1px #07121b;
 }
 
 

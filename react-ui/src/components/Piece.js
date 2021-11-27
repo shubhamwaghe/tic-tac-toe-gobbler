@@ -41,14 +41,7 @@ export default function Piece({ pieceName, position, movePiece }) {
             const dropResult = monitor.getDropResult();
             if(dropResult && dropResult.name){
                 movePiece(pieceName, position, dropResult.name);
-            } else {
-                console.log("No Handling Required!")
             }
-            // if(dropResult && dropResult.name === 'Column 1'){
-            //     setIsFirstColumn(true)
-            // } else {
-            //     setIsFirstColumn(false);
-            // }
         },
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),

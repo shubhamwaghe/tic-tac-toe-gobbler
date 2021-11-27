@@ -1,15 +1,23 @@
 import React, { Component } from 'react'
 import GobblerBoard from './GobblerBoard';
+import GameMoveListBox from './GameMoveListBox';
+import GameNextStepBox from './GameNextStepBox';
+import calculateWinner from './util/WinnerCheckUtil'
+import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
+    assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
+import { getMoveString, removeItem, alertUser } from './util/MiscellaneousUtil'
 
 export default class GobblerGame extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            xIsNext: true,
-            isRest: true,
+    getInitialState() {
+        return {
             stepNumber: 0,
-            history: [{ squares: { 
+            visibleStepNumber: 0,
+            gameOver: false,
+            winnerPlayer: null,
+            history: [{
+                    move: "GAME START",
+                    squares: { 
                     'A3' : [], 'B3' : [], 'C3' : [],
                     'A2' : [], 'B2' : [], 'C2' : [],
                     'A1' : [], 'B1' : [], 'C1' : [],
@@ -20,125 +28,87 @@ export default class GobblerGame extends Component {
         }
     }
 
-    testButton(state) {
-        console.log("Testing...");
-        var current = state.history[0];
-        console.log("State: ", this.state);
-        console.log("Current: ", current.squares);
-        current.squares['RED_GROUND'] = [];
-        current.squares['BLUE_GROUND'].push('RS1');
-
-        state.history[0] = current;
-
-        this.setState(state);
-
-        // this.setState({
-        //     history: history.concat({
-        //         squares: current
-        //     }),
-        //     xIsNext: !this.state.xIsNext,
-        //     stepNumber: history.length
-        // });
+    constructor(props) {
+        super(props);
+        this.state = this.getInitialState();
     }
 
-    handleClick(position) {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        console.log(history);
-        const current = history[history.length - 1];
-        console.log(current);
-        // const squares = current.squares.slice();
-        
-        console.log(position);
-
-        current.squares[position].push('X')
-        this.setState({
-            history: history.concat({
-                squares: current.squares
-            }),
-            xIsNext: !this.state.xIsNext,
-            stepNumber: history.length
-        });
+    getPlayerToMove() {
+        const movesMade = this.state.history.length;
+        return (movesMade % 2 === 0) ? 'R' : 'B';
     }
 
-    assertMovableFromPiecePosition(pieceName, currentPosition) {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        var current = history[history.length - 1];
-        console.log("CURRENT: ", current);
-
-        if(['BLUE_GROUND', 'RED_GROUND'].includes(currentPosition)) return true;
-        
-        const currentPositionPieces = current.squares[currentPosition];
-        return currentPositionPieces.at(-1) === pieceName;
-    }
-
-    assertMovableToPiecePosition(pieceName, targetPosition) {
-        const currentSizeTag = pieceName.substring(1,2); // Gives : 'S' / 'M' / 'L'
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        var current = history[history.length - 1];
-        if (current.squares[targetPosition].length === 0 ) return true;
-
-        const targetSizeTag = current.squares[targetPosition].at(-1).substring(1,2);
-        if (currentSizeTag === 'S') return false; // Small cannot move over any piece
-        if (currentSizeTag === 'M' && ['M', 'L'].includes(targetSizeTag)) return false; // Medium cannot move over Medium, Large
-        if (currentSizeTag === 'L' && targetSizeTag === 'L') return false; // Large cannot move over Large
-
-        console.log("CURRENT: ", current);
-        return true;
-
-    }
-
-    alertUser(message) {
-        window.alert(message);
+    timeTravelMove(moveStepNumber) {
+        this.setState({ visibleStepNumber: moveStepNumber });
     }
 
     movePiece(pieceName, currentPosition, targetPosition) {
+        if (this.state.gameOver) return;
+        if (this.state.visibleStepNumber !== this.state.stepNumber) {
+            this.timeTravelMove(this.state.stepNumber);
+            return;
+        }
         if (currentPosition === targetPosition) return;
-        if(!this.assertMovableFromPiecePosition(pieceName, currentPosition)) return this.alertUser('Illegal Move! Invisible Piece!');
-        if(!this.assertMovableToPiecePosition(pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move over similar/larger piece!');
 
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        console.log("History: ", history);
         var current = history[history.length - 1];
-        console.log("Current: ", current);
 
-        console.log("Current Squares: ", current.squares);
-        console.log(pieceName, currentPosition, targetPosition)
+        if(!assertValidCurrentPlayer(pieceName, this.getPlayerToMove())) return alertUser('Illegal Move! Not Your Turn!');
+        if(!assertMovableFromPiecePosition(current, pieceName, currentPosition)) return alertUser('Illegal Move! Invisible Piece!');
+        if(!assertMovableToPiecePosition(current, pieceName, targetPosition)) return alertUser('Illegal Move! Cannot move over similar/larger piece!');
+        if(!assertMovableToSkipSquare(currentPosition, targetPosition)) return alertUser('Illegal Move! Cannot skip squares!');
 
-        current.squares[currentPosition].pop();
-        current.squares[targetPosition].push(pieceName);
+        var nextSquareState = JSON.parse(JSON.stringify(current.squares));
 
-        console.log("Moving Piece: ", pieceName);
-        console.log("Current Position: ", currentPosition);
-        console.log("Target Position: ", targetPosition);
+        nextSquareState[currentPosition] = removeItem(nextSquareState[currentPosition], pieceName);
+        nextSquareState[targetPosition].push(pieceName);
 
         this.setState({
             history: history.concat({
-                squares: current.squares
+                move: getMoveString(pieceName, currentPosition, targetPosition),
+                squares: nextSquareState
             }),
-            xIsNext: !this.state.xIsNext,
-            stepNumber: history.length
+            stepNumber: history.length,
+            visibleStepNumber: history.length
         });
 
-        console.log("Final State: ", this.state);
+        const winnerPlayer = calculateWinner(nextSquareState);
+        if (winnerPlayer !== null) {
+            this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
+        }
+
+    }
+
+    restartGame() {
+        this.setState(this.getInitialState());
     }
 
     render() {
         const history = this.state.history;
-        const current = history[this.state.stepNumber];
+        const current = history[this.state.visibleStepNumber];
 
         return (
             <div className="game">
                 <div className="game-board">
-                    <GobblerBoard onClick={(position) => this.handleClick(position)} 
-                    movePiece={(pieceName, currentPosition, targetPosition) => this.movePiece(pieceName, currentPosition, targetPosition)}
-                    squares={current.squares} isRest={this.state.isRest} />
+                    <GobblerBoard squares={current.squares}
+                        movePiece={(pieceName, currentPosition, targetPosition) => 
+                            this.movePiece(pieceName, currentPosition, targetPosition)}
+                     />
                 </div>
-{/*                <div className="game-info">
-                    <button onClick={ () => this.testButton(this.state) }>Test</button>
-                </div>*/}
+                <div className="game-info">
+                    <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
+                        playerToMove={this.getPlayerToMove()} />
+                    <div className="info-move"> 
+                        <h3>Moves</h3>
+                        <GameMoveListBox gameMoves={this.state.history} visibleStepNumber={this.state.visibleStepNumber}
+                            timeTravelMove={(index) => this.timeTravelMove(index)} />
+                    </div>
+
+                    <div className="restart-btn-wrapper">
+                        <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
+                    </div>
+                </div>
             </div>
         )
     }
-
-
 }

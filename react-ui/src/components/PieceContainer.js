@@ -4,17 +4,11 @@ import { useDrop } from 'react-dnd'
 
 export default function PieceContainer({ name, pieces, containerType, movePiece }) {
 
-    const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    const [ collectedProps, drop] = useDrop(() => ({
         name: name,
         accept: "PIECE",
-        drop: () => ({ name: name }),
-        collect: monitor => ({
-          canDrop: !!monitor.canDrop(),
-          isOver: !!monitor.isOver(),
-        }),
+        drop: () => ({ name: name })
     }))
-
-    console.log('options', { canDrop, isOver });
 
     return (
         <div
