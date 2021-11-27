@@ -5,7 +5,9 @@ import GameNextStepBox from './GameNextStepBox';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
     assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
-import { getMoveString, removeItem, alertUser } from './util/MiscellaneousUtil'
+import { getMoveString, removeItem } from './util/MiscellaneousUtil'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class GobblerGame extends Component {
 
@@ -46,6 +48,10 @@ export default class GobblerGame extends Component {
         if (this.state.gameOver) return;
         if (this.state.visibleStepNumber !== this.state.stepNumber) {
             this.timeTravelMove(this.state.stepNumber);
+            toast.info('Moved game to latest state!', {
+                position: "top-right",
+                autoClose: 1500,
+            });
             return;
         }
         if (currentPosition === targetPosition) return;
@@ -53,10 +59,10 @@ export default class GobblerGame extends Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         var current = history[history.length - 1];
 
-        if(!assertValidCurrentPlayer(pieceName, this.getPlayerToMove())) return alertUser('Illegal Move! Not Your Turn!');
-        if(!assertMovableFromPiecePosition(current, pieceName, currentPosition)) return alertUser('Illegal Move! Invisible Piece!');
-        if(!assertMovableToPiecePosition(current, pieceName, targetPosition)) return alertUser('Illegal Move! Cannot move over similar/larger piece!');
-        if(!assertMovableToSkipSquare(currentPosition, targetPosition)) return alertUser('Illegal Move! Cannot skip squares!');
+        if(!assertValidCurrentPlayer(pieceName, this.getPlayerToMove())) return this.alertUser('Illegal Move! Not Your Turn!');
+        if(!assertMovableFromPiecePosition(current, pieceName, currentPosition)) return this.alertUser('Illegal Move! Invisible Piece!');
+        if(!assertMovableToPiecePosition(current, pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move over similar/larger piece!');
+        if(!assertMovableToSkipSquare(currentPosition, targetPosition)) return this.alertUser('Illegal Move! Cannot skip squares!');
 
         var nextSquareState = JSON.parse(JSON.stringify(current.squares));
 
@@ -74,12 +80,27 @@ export default class GobblerGame extends Component {
 
         const winnerPlayer = calculateWinner(nextSquareState);
         if (winnerPlayer !== null) {
+            toast.success('We have a winner!', {
+                position: "top-right",
+                autoClose: 5000,
+            });
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
         }
 
     }
 
+    alertUser(message) {
+        toast.warn(message, {
+            position: "top-right",
+            autoClose: 3000,
+        });
+    }
+
     restartGame() {
+        toast.info('Game Restarted!', {
+            position: "top-right",
+            autoClose: 1500,
+        });
         this.setState(this.getInitialState());
     }
 
@@ -88,24 +109,28 @@ export default class GobblerGame extends Component {
         const current = history[this.state.visibleStepNumber];
 
         return (
-            <div className="game">
-                <div className="game-board">
-                    <GobblerBoard squares={current.squares}
-                        movePiece={(pieceName, currentPosition, targetPosition) => 
-                            this.movePiece(pieceName, currentPosition, targetPosition)}
-                     />
-                </div>
-                <div className="game-info">
-                    <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
-                        playerToMove={this.getPlayerToMove()} />
-                    <div className="info-move"> 
-                        <h3>Moves</h3>
-                        <GameMoveListBox gameMoves={this.state.history} visibleStepNumber={this.state.visibleStepNumber}
-                            timeTravelMove={(index) => this.timeTravelMove(index)} />
+            <div>
+                <ToastContainer autoClose={10000} hideProgressBar={false}
+                newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
+                <div className="game">
+                    <div className="game-board">
+                        <GobblerBoard squares={current.squares}
+                            movePiece={(pieceName, currentPosition, targetPosition) => 
+                                this.movePiece(pieceName, currentPosition, targetPosition)}
+                         />
                     </div>
+                    <div className="game-info">
+                        <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
+                            playerToMove={this.getPlayerToMove()} />
+                        <div className="info-move"> 
+                            <h3>Moves</h3>
+                            <GameMoveListBox gameMoves={this.state.history} visibleStepNumber={this.state.visibleStepNumber}
+                                timeTravelMove={(index) => this.timeTravelMove(index)} />
+                        </div>
 
-                    <div className="restart-btn-wrapper">
-                        <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
+                        <div className="restart-btn-wrapper">
+                            <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
+                        </div>
                     </div>
                 </div>
             </div>

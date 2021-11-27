@@ -10,8 +10,4 @@ function removeItem(arr, item) {
     return arr.filter(el => el !== item);
 }
 
-function alertUser(message) {
-    window.alert(message);
-}
-
-export { getMoveString, removeItem, alertUser }
+export { getMoveString, removeItem }
