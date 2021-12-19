@@ -27,6 +27,17 @@
   width: 60px;
 }
 
+.flex-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.happy-image {
+  height: 30px;
+  padding: 0px 6px;
+}
+
 /* Grid */
 .grid-container {
   display: grid;
@@ -161,8 +172,33 @@
   background-color: #2c88d9;
 }
 
+.blue-join-button {
+  background-color: #2c88d9;
+  color: white;
+}
+
 .red-move-button {
   background-color: #d3445b;
+}
+
+.red-join-button {
+  background-color: #d3445b;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.join-input-box {
+  padding: 10px;
+  margin-top: 12px;
+  width: 300px;
+  margin-right: 12px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .btn {

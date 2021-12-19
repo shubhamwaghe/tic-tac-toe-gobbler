@@ -1,7 +1,7 @@
 import React from 'react'
 import sunglasses from '../img/sunglasses.png'
 
-export default function GameMoveListBox({ gameOver, winnerPlayer, playerToMove }) {
+export default function GameMoveListBox({ gameOver, winnerPlayer, playerToMove, playerNames }) {
 
     function getFullColorName(colorInitial) {
         if (colorInitial === 'B') return 'BLUE';
@@ -11,13 +11,13 @@ export default function GameMoveListBox({ gameOver, winnerPlayer, playerToMove }
 
     if (gameOver) {
         return(<div align="center" className="info-player">
-            <b>{getFullColorName(winnerPlayer)}</b> Wins!!!
+            <b>{getFullColorName(winnerPlayer)} : {playerNames[winnerPlayer]} </b> Wins!!!
             <img src={sunglasses} className="sunglasses-img"  alt="Sunglasses"/>
         </div>)
     } else {
 
         return(<div align="center" className="info-player">
-            Player to Move: <br /> <b>{getFullColorName(playerToMove)}</b>
+            Player to Move: <br /> <b>{getFullColorName(playerToMove)} - {playerNames[playerToMove]}</b>
         </div>)
     }
 }

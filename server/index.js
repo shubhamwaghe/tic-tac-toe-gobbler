@@ -8,8 +8,16 @@ const socketIo = require("socket.io");
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
 
-const STATIC_CHANNELS = ['global_notifications', 'global_chat'];
-
+var PLAYER_INFO = {
+  "B": {
+    joined: false,
+    name: null
+  },
+  "R": {
+    joined: false,
+    name: null
+  }
+}
 
 
 // Multi-process to utilize all CPU cores.
@@ -43,17 +51,19 @@ if (!isDev && cluster.isMaster) {
   /* Sockets Code */
   //Whenever someone connects this gets executed
   io.on('connection', function(socket) {
-    console.log('A user connected', socket.id);
-    socket.join('channel-1');
-
+    console.log('A User Connected!', socket.id);
 
     //Whenever someone disconnects this piece of code executed
     socket.on('disconnect', function () {
-      console.log('A user disconnected');
+      console.log('A User Disconnected!');
+    });
+
+    socket.on('join-channel', function (data) {
+      socket.join('channel-1');
+      socket.broadcast.in('channel-1').emit('join-channel-notification', data); 
     });
 
     socket.on('move-piece', function (data) {
-      console.log(data);
       socket.broadcast.in('channel-1').emit('move-piece', data); 
     });
   });

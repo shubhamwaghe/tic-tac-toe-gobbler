@@ -17,8 +17,14 @@ export default class GobblerGame extends Component {
         return {
             stepNumber: 0,
             visibleStepNumber: 0,
-            gameOver: false,
+            playerNames: {
+                'B': "Blue Player",
+                'R': "Red Player"
+            },
+            // bluePlayerName: "Blue Player",
+            // redPlayerName: "Red Player", 
             winnerPlayer: null,
+            gameOver: false,
             history: [{
                     move: "GAME START",
                     squares: { 
@@ -37,7 +43,7 @@ export default class GobblerGame extends Component {
 
         // Initialise One Socket Connection
         this.socket = socketClient();
-        console.log("Connected: ", this.socket.id);
+        this.setupSocketInteractions();
         this.state = this.getInitialState();
     }
 
@@ -53,7 +59,7 @@ export default class GobblerGame extends Component {
             this.timeTravelMove(this.state.stepNumber);
             toast.info('Moved game to latest state!', {
                 position: "top-right",
-                autoClose: 1500,
+                autoClose: 2500,
             });
             return;
         }
@@ -102,6 +108,19 @@ export default class GobblerGame extends Component {
 
     }
 
+    infoUser(message) {
+        toast.info(message, {
+            position: "top-right",
+            autoClose: 6000,
+        });
+    }
+
+    handlePlayerJoin(color, playerName) {
+
+        const msgString = `${playerName} has joined the Game!`
+        this.infoUser(msgString);
+    }
+
     alertUser(message) {
         toast.warn(message, {
             position: "top-right",
@@ -117,16 +136,19 @@ export default class GobblerGame extends Component {
         this.setState(this.getInitialState());
     }
 
-
     /* Socket Interactions */
-    componentDidMount() {
-        // this.socket.emit('chat', 'Hello');
+    setupSocketInteractions() {
+
+        // The context of `this` changes, hence using self
         var self = this;
         this.socket.on('move-piece', function(data){
             console.log('The data is: ', data);
-            // The context of `this` changes, hence using self
-            console.log(data.pieceName, data.currentPosition, data.targetPosition);
             self.movePiece(data.pieceName, data.currentPosition, data.targetPosition);
+        });
+
+        // Someone joined the channel notification!
+        this.socket.on('join-channel-notification', function({ color, playerName }){
+            self.handlePlayerJoin(color, playerName)
         });
     }
 
@@ -136,7 +158,24 @@ export default class GobblerGame extends Component {
             "currentPosition": currentPosition,
             "targetPosition": targetPosition
         });
-        console.log(pieceName, currentPosition, targetPosition);
+    }
+
+    joinBluePlayer(bluePlayerName) {
+        const redPlayerName = this.state.playerNames['R']
+        this.setState({ playerNames: { 'B': bluePlayerName, 'R': redPlayerName } });
+        this.socket.emit('join-channel', {
+            "color": 'B',
+            "playerName": bluePlayerName
+        });
+    }
+
+    joinRedPlayer(redPlayerName) {
+        const bluePlayerName = this.state.playerNames['B']
+        this.setState({ playerNames: { 'R': redPlayerName, 'B': bluePlayerName } });
+        this.socket.emit('join-channel', {
+            "color": 'R',
+            "playerName": redPlayerName
+        });
     }
 
     render() {
@@ -145,7 +184,7 @@ export default class GobblerGame extends Component {
 
         return (
             <div>
-                <PlayerWelcomeModal />
+                <PlayerWelcomeModal joinBluePlayer={(bluePlayerName) => this.joinBluePlayer(bluePlayerName)} joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} />
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
                 <div className="game">
@@ -157,7 +196,7 @@ export default class GobblerGame extends Component {
                     </div>
                     <div className="game-info">
                         <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
-                            playerToMove={this.getPlayerToMove()} />
+                            playerToMove={this.getPlayerToMove()} playerNames={this.state.playerNames} />
                         <div className="info-move"> 
                             <h3>Moves</h3>
                             <GameMoveListBox gameMoves={this.state.history} visibleStepNumber={this.state.visibleStepNumber}
