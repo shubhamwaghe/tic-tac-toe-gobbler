@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import socketClient  from "socket.io-client";
 import GobblerBoard from './GobblerBoard';
 import GameMoveListBox from './GameMoveListBox';
 import GameNextStepBox from './GameNextStepBox';
@@ -33,6 +34,10 @@ export default class GobblerGame extends Component {
 
     constructor(props) {
         super(props);
+
+        // Initialise One Socket Connection
+        this.socket = socketClient();
+        console.log("Connected: ", this.socket.id);
         this.state = this.getInitialState();
     }
 
@@ -41,11 +46,8 @@ export default class GobblerGame extends Component {
         return (movesMade % 2 === 0) ? 'R' : 'B';
     }
 
-    timeTravelMove(moveStepNumber) {
-        this.setState({ visibleStepNumber: moveStepNumber });
-    }
-
     movePiece(pieceName, currentPosition, targetPosition) {
+        console.log(pieceName, currentPosition, targetPosition);
         if (this.state.gameOver) return;
         if (this.state.visibleStepNumber !== this.state.stepNumber) {
             this.timeTravelMove(this.state.stepNumber);
@@ -79,6 +81,16 @@ export default class GobblerGame extends Component {
             visibleStepNumber: history.length
         });
 
+        this.checkForWinner(nextSquareState);
+        this.emitMoveToPlayer(pieceName, currentPosition, targetPosition);
+
+    }
+    timeTravelMove(moveStepNumber) {
+        this.setState({ visibleStepNumber: moveStepNumber });
+    }
+
+
+    checkForWinner(nextSquareState) {
         const winnerPlayer = calculateWinner(nextSquareState);
         if (winnerPlayer !== null) {
             toast.success('We have a winner!', {
@@ -103,6 +115,28 @@ export default class GobblerGame extends Component {
             autoClose: 1500,
         });
         this.setState(this.getInitialState());
+    }
+
+
+    /* Socket Interactions */
+    componentDidMount() {
+        // this.socket.emit('chat', 'Hello');
+        var self = this;
+        this.socket.on('move-piece', function(data){
+            console.log('The data is: ', data);
+            // The context of `this` changes, hence using self
+            console.log(data.pieceName, data.currentPosition, data.targetPosition);
+            self.movePiece(data.pieceName, data.currentPosition, data.targetPosition);
+        });
+    }
+
+    emitMoveToPlayer(pieceName, currentPosition, targetPosition) {
+        this.socket.emit('move-piece', {
+            "pieceName": pieceName, 
+            "currentPosition": currentPosition,
+            "targetPosition": targetPosition
+        });
+        console.log(pieceName, currentPosition, targetPosition);
     }
 
     render() {
