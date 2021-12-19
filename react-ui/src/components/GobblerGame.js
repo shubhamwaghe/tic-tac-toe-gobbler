@@ -3,6 +3,7 @@ import socketClient  from "socket.io-client";
 import GobblerBoard from './GobblerBoard';
 import GameMoveListBox from './GameMoveListBox';
 import GameNextStepBox from './GameNextStepBox';
+import PlayerWelcomeModal from './PlayerWelcomeModal';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
     assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
@@ -144,7 +145,7 @@ export default class GobblerGame extends Component {
 
         return (
             <div>
-
+                <PlayerWelcomeModal />
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
                 <div className="game">

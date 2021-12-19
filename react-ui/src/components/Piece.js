@@ -50,7 +50,7 @@ export default function Piece({ pieceName, position, movePiece }) {
 
     return (
 
-        <img src={getPieceImage()} ref={drag} className={`piece-image ${getPieceSizeClassName()}`}  alt="Piece" style={{
+        <img src={getPieceImage()} ref={drag} className={`grabbable piece-image ${getPieceSizeClassName()}`}  alt="Piece" style={{
             opacity: isDragging ? 0.5 : 1,
             fontSize: 25,
             fontWeight: 'bold',

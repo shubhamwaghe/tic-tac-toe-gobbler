@@ -165,6 +165,45 @@
   background-color: #d3445b;
 }
 
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 16px;
+    font-size: 13px;
+    line-height: 1.846;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: all 0.4s;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/*.btn {
+    text-transform: uppercase;
+    border: none;
+}*/
+
+.btn-success {
+    color: #ffffff;
+    background-color: #4caf50;
+    border-color: transparent;
+}
+
+.btn-success:hover, .btn-success:active:hover {
+    background-color: #439a46;
+}
+
 .badge-button {
   background-color: crimson;
   color: white;
@@ -178,6 +217,20 @@
 
 .badge-button-hidden {
   visibility: hidden;
+}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.grabbable:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }
 
 /* The navigation bar */
