@@ -172,6 +172,12 @@
   background-color: #2c88d9;
 }
 
+.join-button:disabled {
+  opacity: 0.7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
 .blue-join-button {
   background-color: #2c88d9;
   color: white;

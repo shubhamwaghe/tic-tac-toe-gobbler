@@ -7,7 +7,7 @@ import PlayerWelcomeModal from './PlayerWelcomeModal';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
     assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
-import { getMoveString, removeItem } from './util/MiscellaneousUtil'
+import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,10 +17,9 @@ export default class GobblerGame extends Component {
         return {
             stepNumber: 0,
             visibleStepNumber: 0,
-            playerNames: {
-                'B': "Blue Player",
-                'R': "Red Player"
-            },
+            myColor: null,
+            playerNames: { 'B': "", 'R': "" },
+            playerJoined: { 'B': false, 'R': false },
             // bluePlayerName: "Blue Player",
             // redPlayerName: "Red Player", 
             winnerPlayer: null,
@@ -52,8 +51,8 @@ export default class GobblerGame extends Component {
         return (movesMade % 2 === 0) ? 'R' : 'B';
     }
 
-    movePiece(pieceName, currentPosition, targetPosition) {
-        console.log(pieceName, currentPosition, targetPosition);
+    movePiece(pieceColor, pieceName, currentPosition, targetPosition, emittedEventMove = false) {
+
         if (this.state.gameOver) return;
         if (this.state.visibleStepNumber !== this.state.stepNumber) {
             this.timeTravelMove(this.state.stepNumber);
@@ -64,6 +63,10 @@ export default class GobblerGame extends Component {
             return;
         }
         if (currentPosition === targetPosition) return;
+
+        // Online Play but Trying to play opposite color
+        if ((pieceColor !== this.state.myColor && this.state.myColor !== null) && !emittedEventMove) 
+            return this.alertUser('Illegal Move! Not Your Color!');
 
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         var current = history[history.length - 1];
@@ -87,8 +90,10 @@ export default class GobblerGame extends Component {
             visibleStepNumber: history.length
         });
 
+        if (this.state.myColor === pieceColor) {
+            this.emitMoveToPlayer(this.state.myColor, pieceName, currentPosition, targetPosition);
+        }
         this.checkForWinner(nextSquareState);
-        this.emitMoveToPlayer(pieceName, currentPosition, targetPosition);
 
     }
     timeTravelMove(moveStepNumber) {
@@ -115,9 +120,22 @@ export default class GobblerGame extends Component {
         });
     }
 
-    handlePlayerJoin(color, playerName) {
+    setPlayerName(playerColor, playerName) {
+        const updatedPlayerNames = this.state.playerNames;
+        updatedPlayerNames[playerColor] = playerName;
+        this.setState({ playerNames: updatedPlayerNames })
+    }
 
-        const msgString = `${playerName} has joined the Game!`
+    setPlayerJoined(playerColor, playerJoined) {
+        const updatedPlayerJoined = this.state.playerJoined;
+        updatedPlayerJoined[playerColor] = playerJoined;
+        this.setState({ playerJoined: updatedPlayerJoined })
+    }
+
+    handlePlayerJoin(color, playerName) {
+        const msgString = `${playerName} has joined the Game as Player - ${getFullColorName(color)}!`
+        this.setPlayerName(color, playerName);
+        this.setPlayerJoined(color, true);
         this.infoUser(msgString);
     }
 
@@ -143,7 +161,7 @@ export default class GobblerGame extends Component {
         var self = this;
         this.socket.on('move-piece', function(data){
             console.log('The data is: ', data);
-            self.movePiece(data.pieceName, data.currentPosition, data.targetPosition);
+            self.movePiece(data.pieceColor, data.pieceName, data.currentPosition, data.targetPosition, true);
         });
 
         // Someone joined the channel notification!
@@ -152,8 +170,9 @@ export default class GobblerGame extends Component {
         });
     }
 
-    emitMoveToPlayer(pieceName, currentPosition, targetPosition) {
+    emitMoveToPlayer(pieceColor, pieceName, currentPosition, targetPosition) {
         this.socket.emit('move-piece', {
+            "pieceColor": pieceColor, 
             "pieceName": pieceName, 
             "currentPosition": currentPosition,
             "targetPosition": targetPosition
@@ -161,8 +180,8 @@ export default class GobblerGame extends Component {
     }
 
     joinBluePlayer(bluePlayerName) {
-        const redPlayerName = this.state.playerNames['R']
-        this.setState({ playerNames: { 'B': bluePlayerName, 'R': redPlayerName } });
+        this.setState({ myColor: 'B' });
+        this.setPlayerName('B', bluePlayerName);
         this.socket.emit('join-channel', {
             "color": 'B',
             "playerName": bluePlayerName
@@ -170,8 +189,8 @@ export default class GobblerGame extends Component {
     }
 
     joinRedPlayer(redPlayerName) {
-        const bluePlayerName = this.state.playerNames['B']
-        this.setState({ playerNames: { 'R': redPlayerName, 'B': bluePlayerName } });
+        this.setState({ myColor: 'R'});
+        this.setPlayerName('R', redPlayerName);
         this.socket.emit('join-channel', {
             "color": 'R',
             "playerName": redPlayerName
@@ -184,14 +203,18 @@ export default class GobblerGame extends Component {
 
         return (
             <div>
-                <PlayerWelcomeModal joinBluePlayer={(bluePlayerName) => this.joinBluePlayer(bluePlayerName)} joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} />
+                <PlayerWelcomeModal playerNames={this.state.playerNames} 
+                playerJoined={this.state.playerJoined}
+                setPlayerName={(color, playerName) => this.setPlayerName(color, playerName)} 
+                joinBluePlayer={(bluePlayerName) => this.joinBluePlayer(bluePlayerName)} 
+                joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} />
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
                 <div className="game">
                     <div className="game-board">
                         <GobblerBoard squares={current.squares}
-                            movePiece={(pieceName, currentPosition, targetPosition) => 
-                                this.movePiece(pieceName, currentPosition, targetPosition)}
+                            movePiece={(pieceColor, pieceName, currentPosition, targetPosition) => 
+                                this.movePiece(pieceColor, pieceName, currentPosition, targetPosition)}
                          />
                     </div>
                     <div className="game-info">

@@ -10,4 +10,12 @@ function removeItem(arr, item) {
     return arr.filter(el => el !== item);
 }
 
-export { getMoveString, removeItem }
+function getFullColorName(colorTag) {
+    switch (colorTag) {
+      case 'R': return "RED";
+      case 'B': return "BLUE";
+      default: return;
+    }
+}
+
+export { getMoveString, removeItem, getFullColorName }

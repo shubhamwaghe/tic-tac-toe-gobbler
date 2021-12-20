@@ -33,14 +33,20 @@ export default function Piece({ pieceName, position, movePiece }) {
         }
     }
 
+    function getPieceColor() {
+        const colorTag = pieceName.substring(0,1);
+        return colorTag;
+    }
+
     const [{isDragging}, drag] = useDrag(() => ({
         pieceName: pieceName,
+        pieceColor: getPieceColor(),
         position: position,
         type: "PIECE",
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult();
             if(dropResult && dropResult.name){
-                movePiece(pieceName, position, dropResult.name);
+                movePiece(getPieceColor(), pieceName, position, dropResult.name);
             }
         },
         collect: monitor => ({

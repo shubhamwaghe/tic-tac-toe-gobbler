@@ -11,10 +11,12 @@ const PORT = process.env.PORT || 5000;
 var PLAYER_INFO = {
   "B": {
     joined: false,
+    socketId: null,
     name: null
   },
   "R": {
     joined: false,
+    socketId: null,
     name: null
   }
 }
@@ -52,6 +54,7 @@ if (!isDev && cluster.isMaster) {
   //Whenever someone connects this gets executed
   io.on('connection', function(socket) {
     console.log('A User Connected!', socket.id);
+    socket.join('channel-1');
 
     //Whenever someone disconnects this piece of code executed
     socket.on('disconnect', function () {
@@ -59,7 +62,11 @@ if (!isDev && cluster.isMaster) {
     });
 
     socket.on('join-channel', function (data) {
-      socket.join('channel-1');
+      var playerColor = data.color;
+      var playerName = data.playerName;
+      if (!PLAYER_INFO[playerColor]['joined']) {
+        PLAYER_INFO[playerColor] = { joined: true, playerName: playerName, socketId: socket.id }
+      }
       socket.broadcast.in('channel-1').emit('join-channel-notification', data); 
     });
 

@@ -4,7 +4,7 @@ import happyemoji from '../img/happy-emoji.png'
 
 import 'react-bootstrap-modal/lib/css/rbm-complete.css';
 
-export default function PlayerWelcomeModal({ joinBluePlayer, joinRedPlayer }) {
+export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlayerName, joinBluePlayer, joinRedPlayer }) {
 
     const [open, setOpen] = useState(true);
     const [bluePlayerName, setBluePlayerName] = useState("");
@@ -38,11 +38,13 @@ export default function PlayerWelcomeModal({ joinBluePlayer, joinRedPlayer }) {
 
     function updateBluePlayerName(evt) {
         setBluePlayerName(evt.target.value);
+        setPlayerName('B', evt.target.value);
         setBluePlayerErrorDisplay(false);
     }
 
     function updateRedPlayerName(evt) {
         setRedPlayerName(evt.target.value);
+        setPlayerName('R', evt.target.value);
         setRedPlayerErrorDisplay(false);
 
     }
@@ -66,8 +68,9 @@ export default function PlayerWelcomeModal({ joinBluePlayer, joinRedPlayer }) {
                     <div>
                         <div>
                             <input className="join-input-box" placeholder="Enter Your Name" 
-                            value={bluePlayerName} onChange={evt => updateBluePlayerName(evt)} />
-                            <button type="submit" className='btn blue-join-button' onClick={() => joinBluePlayerBtn()} >
+                            value={playerNames['B']} onChange={evt => updateBluePlayerName(evt)} disabled={playerJoined['B']} />
+                            <button type="submit" className='btn join-button blue-join-button' 
+                            onClick={() => joinBluePlayerBtn()} disabled={playerJoined['B']}>
                                 <b>Join as BLUE Player</b>
                             </button>
                             <div className={`error-message ${!bluePlayerErrorDisplay ? 'hidden' : undefined }`}>
@@ -76,8 +79,9 @@ export default function PlayerWelcomeModal({ joinBluePlayer, joinRedPlayer }) {
                         </div>
                         <div>
                             <input className="join-input-box" placeholder="Enter Your Name" 
-                            value={redPlayerName} onChange={evt => updateRedPlayerName(evt)} />
-                            <button type="submit" className='btn red-join-button' onClick={() => joinRedPlayerBtn()} >
+                            value={playerNames['R']} onChange={evt => updateRedPlayerName(evt)} disabled={playerJoined['R']} />
+                            <button type="submit" className='btn join-button red-join-button' 
+                            onClick={() => joinRedPlayerBtn()} disabled={playerJoined['R']} >
                                 <b>Join as RED Player</b>
                             </button>
                             <div className={`error-message ${!redPlayerErrorDisplay ? 'hidden' : undefined }`}>
