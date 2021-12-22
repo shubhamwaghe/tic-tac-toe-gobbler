@@ -4,7 +4,7 @@ import happyemoji from '../img/happy-emoji.png'
 
 import 'react-bootstrap-modal/lib/css/rbm-complete.css';
 
-export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlayerName, joinBluePlayer, joinRedPlayer }) {
+export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlayerName, joinBluePlayer, joinRedPlayer, playOffline }) {
 
     const [open, setOpen] = useState(true);
     const [bluePlayerName, setBluePlayerName] = useState("");
@@ -34,6 +34,7 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
 
     function saveAndClose() {
         setOpen(false);
+        playOffline();
     }
 
     function updateBluePlayerName(evt) {

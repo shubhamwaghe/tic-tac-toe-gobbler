@@ -20,8 +20,6 @@ export default class GobblerGame extends Component {
             myColor: null,
             playerNames: { 'B': "", 'R': "" },
             playerJoined: { 'B': false, 'R': false },
-            // bluePlayerName: "Blue Player",
-            // redPlayerName: "Red Player", 
             winnerPlayer: null,
             gameOver: false,
             history: [{
@@ -54,7 +52,7 @@ export default class GobblerGame extends Component {
     movePiece(pieceColor, pieceName, currentPosition, targetPosition, emittedEventMove = false) {
 
         if (this.state.gameOver) return;
-        if (this.state.visibleStepNumber !== this.state.stepNumber) {
+        if (this.state.myColor === pieceColor && this.state.visibleStepNumber !== this.state.stepNumber) {
             this.timeTravelMove(this.state.stepNumber);
             toast.info('Moved game to latest state!', {
                 position: "top-right",
@@ -81,21 +79,34 @@ export default class GobblerGame extends Component {
         nextSquareState[currentPosition] = removeItem(nextSquareState[currentPosition], pieceName);
         nextSquareState[targetPosition].push(pieceName);
 
+        var moveObject = {
+            move: getMoveString(pieceName, currentPosition, targetPosition),
+            squares: nextSquareState
+        }
+
         this.setState({
-            history: history.concat({
-                move: getMoveString(pieceName, currentPosition, targetPosition),
-                squares: nextSquareState
-            }),
+            history: history.concat(moveObject),
             stepNumber: history.length,
             visibleStepNumber: history.length
         });
 
         if (this.state.myColor === pieceColor) {
-            this.emitMoveToPlayer(this.state.myColor, pieceName, currentPosition, targetPosition);
+            this.emitMoveToPlayer(this.state.myColor, pieceName, currentPosition, targetPosition, moveObject);
         }
         this.checkForWinner(nextSquareState);
 
     }
+
+    // resumeGameState(history) {
+    //     console.log(history);
+    //     console.log(this.state.history);
+    //     this.setState({
+    //         history: history,
+    //         stepNumber: history.length,
+    //         visibleStepNumber: history.length
+    //     });
+    // }
+
     timeTravelMove(moveStepNumber) {
         this.setState({ visibleStepNumber: moveStepNumber });
     }
@@ -111,13 +122,6 @@ export default class GobblerGame extends Component {
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
         }
 
-    }
-
-    infoUser(message) {
-        toast.info(message, {
-            position: "top-right",
-            autoClose: 6000,
-        });
     }
 
     setPlayerName(playerColor, playerName) {
@@ -139,6 +143,22 @@ export default class GobblerGame extends Component {
         this.infoUser(msgString);
     }
 
+    handlePlayerLeft(color, playerName) {
+        const msgString = `${playerName} has left the Game as Player - ${getFullColorName(color)}!`
+        this.setPlayerName(color, "");
+        this.setPlayerJoined(color, false);
+        this.setState({ myColor: null });
+        this.playOffline();
+        this.infoUser(msgString);
+    }
+
+    infoUser(message) {
+        toast.info(message, {
+            position: "top-right",
+            autoClose: 6000,
+        });
+    }
+
     alertUser(message) {
         toast.warn(message, {
             position: "top-right",
@@ -154,13 +174,17 @@ export default class GobblerGame extends Component {
         this.setState(this.getInitialState());
     }
 
+    forceOffline() {
+        this.setState({ myColor: null });
+        this.infoUser('You are now playing offline!');
+    }
+
     /* Socket Interactions */
     setupSocketInteractions() {
 
         // The context of `this` changes, hence using self
         var self = this;
         this.socket.on('move-piece', function(data){
-            console.log('The data is: ', data);
             self.movePiece(data.pieceColor, data.pieceName, data.currentPosition, data.targetPosition, true);
         });
 
@@ -168,20 +192,35 @@ export default class GobblerGame extends Component {
         this.socket.on('join-channel-notification', function({ color, playerName }){
             self.handlePlayerJoin(color, playerName)
         });
+
+        this.socket.on('left-channel-notification', function({ color, playerName }){
+            self.handlePlayerLeft(color, playerName)
+        });
+
+        this.socket.on('force-offline', function({ message }){
+            self.infoUser(message);
+            self.forceOffline();
+        });
+
+        // this.socket.on('patch-game-state', function({ history }){
+        //     console.log(history);
+        //     self.resumeGameState(history);
+        // });
     }
 
-    emitMoveToPlayer(pieceColor, pieceName, currentPosition, targetPosition) {
+    emitMoveToPlayer(pieceColor, pieceName, currentPosition, targetPosition, moveObject) {
         this.socket.emit('move-piece', {
             "pieceColor": pieceColor, 
             "pieceName": pieceName, 
             "currentPosition": currentPosition,
-            "targetPosition": targetPosition
+            "targetPosition": targetPosition,
+            "moveObject": moveObject
         });
     }
 
     joinBluePlayer(bluePlayerName) {
         this.setState({ myColor: 'B' });
-        this.setPlayerName('B', bluePlayerName);
+        // this.setPlayerName('B', bluePlayerName);
         this.socket.emit('join-channel', {
             "color": 'B',
             "playerName": bluePlayerName
@@ -190,11 +229,18 @@ export default class GobblerGame extends Component {
 
     joinRedPlayer(redPlayerName) {
         this.setState({ myColor: 'R'});
-        this.setPlayerName('R', redPlayerName);
+        // this.setPlayerName('R', redPlayerName);
         this.socket.emit('join-channel', {
             "color": 'R',
             "playerName": redPlayerName
         });
+    }
+
+    playOffline() {
+        if (this.state.myColor !== null) {
+            this.socket.emit('channel-leave-request', { color: this.state.myColor });
+        }
+        this.infoUser('You are now playing offline!');
     }
 
     render() {
@@ -207,7 +253,8 @@ export default class GobblerGame extends Component {
                 playerJoined={this.state.playerJoined}
                 setPlayerName={(color, playerName) => this.setPlayerName(color, playerName)} 
                 joinBluePlayer={(bluePlayerName) => this.joinBluePlayer(bluePlayerName)} 
-                joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} />
+                joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} 
+                playOffline={() => this.playOffline()} />
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
                 <div className="game">
