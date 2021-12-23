@@ -1,10 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import logo from './logo.svg';
-import Game from './components/Game';
+import Navbar from './components/section/Navbar';
+import SideNav from './components/section/SideNav';
+import GobblerGame from './components/GobblerGame';
+import About from './components/section/About';
+import { Route, Routes } from 'react-router-dom';
+import { KeepAlive } from 'react-keep-alive';
 import './App.css';
 
 function App() {
   const [message, setMessage] = useState(null);
+  const [gamesPlayed, setGamesPlayed] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const [url, setUrl] = useState('/api');
 
@@ -18,6 +23,7 @@ function App() {
       })
       .then(json => {
         setMessage(json.message);
+        setGamesPlayed(json.gamesPlayed);
         setIsFetching(false);
       }).catch(e => {
         setMessage(`API call failed: ${e}`);
@@ -33,8 +39,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <Game />
+        <Navbar />
       </header>
+      <SideNav />
+        <Routes>
+          <Route path="/" element={ <KeepAlive name="GobblerGame"><GobblerGame /></KeepAlive> } />
+          <Route path="/about" element={ <About gamesPlayed={gamesPlayed} /> } />
+        </Routes>
     </div>
   );
 

@@ -1,69 +1,4 @@
-
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 50px;
-  font-weight: bold;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 80px;
-  line-height: 80px;
-  height: 80px;
-  display: inline-block;
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    background-color: #538fbe;
-    margin: 10px;
-    border: 1px solid #2d6898;
-    background-image: linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0, rgb(73,132,180)),
-        color-stop(1, rgb(97,155,203))
-    );
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    text-shadow: 0px -1px 0px rgba(0,0,0,.5);
-    -webkit-box-shadow: 0px 6px 0px #2b638f, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
-    -moz-box-shadow: 0px 6px 0px #2b638f, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
-    box-shadow: 0px 6px 0px #2b638f, 0px 3px 15px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
- 
- }
- .square:active {
-  background-image: linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-  background-image: -o-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-  background-image: -moz-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-  background-image: -webkit-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-  background-image: -ms-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
- 
-  background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, rgb(88,154,204)),
-      color-stop(1, rgb(90,150,199))
-  );
- }
- 
- 
- /* Board */
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
- }
- /* Game */
+/* Game */
 .game {
   position: absolute;
   top: 50%;
@@ -72,15 +7,438 @@
   display: flex;
   flex-direction: row;
   margin: 0 auto;  
- }
- /* Game Info */
-ul {
-  padding-left: 30px;
- }
- .game-info {
-  margin-left: 20px;
- }
- .status {
-  margin-bottom: 10px;
- }
+}
+
+.player-name-span {
+  font-size: 14px;
+}
+
+/* Pieces */
+
+.piece-image {
+  padding: 8px 2px;
+}
+
+.piece-small {
+  width: 40px;
+}
+
+.piece-medium {
+  width: 50px;
+}
+
+.piece-large {
+  width: 60px;
+}
+
+.flex-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.happy-image {
+  height: 30px;
+  padding: 0px 6px;
+}
+
+/* Grid */
+.grid-container {
+  display: grid;
+  border: solid #ccc 6px;
+  grid-template-columns: 1fr 4fr 4fr 4fr;;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  border: solid #ccc 4px;
+  font-size: 12px;
+}
+
+.row-grid-item {
+  display: grid;
+  align-items: center;
+  background-color: #ccc;
+  width: 28px;
+}
+
+.column-grid-item {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  background-color: #ccc;
+  height: 24px;
+}
+
+.circular-badge {
+  padding: 6px;
+  width: 14px;
+  height: 14px;
+  color: white;
+  background: grey;
+  border-radius: 50%
+}
+
+.piece-ground{
+    height: 150px;
+    display: grid;
+    background-color: azure;
+    border: solid #ccc 2px;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+.piece-square { 
+  height: 75px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.piece-square .piece-image {
+  grid-column-start: first-row;
+  grid-row-start: first-row;
+}
+
+
+.game-heading {
+  color: #f2f2f2;
+}
+
+.game-info {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-player {
+  font-size: 24px;
+}
+
+.info-move {
+  margin-top: 30px;
+}
+
+.move-list { 
+  padding: 0px;
+  list-style-type:none;
+  max-height: 325px;
+  overflow: scroll;
+}
+
+.move-list li {
+  padding: 5px 0px;
+  display: flex;
+}
+
+.move-button {
+  background-color: #13aa52;
+  font-size: 12px;
+  width: 135px;
+  border: 1px solid #13aa52;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  outline: 0;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.move-button:hover {
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  /*background-color: #13aa52;*/
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .move-button {
+    padding: 6px 14px;
+  }
+}
+
+.terminal-move-button {
+  background-color: #fa6400;
+}
+
+.blue-move-button {
+  background-color: #2c88d9;
+}
+
+.join-button:disabled {
+  opacity: 0.7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.blue-join-button {
+  background-color: #2c88d9;
+  color: white;
+}
+
+.red-move-button {
+  background-color: #d3445b;
+}
+
+.red-join-button {
+  background-color: #d3445b;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.join-input-box {
+  padding: 10px;
+  margin-top: 12px;
+  width: 300px;
+  margin-right: 12px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 16px;
+    font-size: 13px;
+    line-height: 1.846;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: all 0.4s;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/*.btn {
+    text-transform: uppercase;
+    border: none;
+}*/
+
+.btn-success {
+    color: #ffffff;
+    background-color: #4caf50;
+    border-color: transparent;
+}
+
+.btn-success:hover, .btn-success:active:hover {
+    background-color: #439a46;
+}
+
+.badge-button {
+  background-color: crimson;
+  color: white;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  border-radius: 50%;
+  width: 30px;
+  margin-left: 6px;
+}
+
+.badge-button-hidden {
+  visibility: hidden;
+}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.grabbable:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+/* The navigation bar */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+}
+
+.navbar-wrapper {
+  margin-left: 240px;
+}
+
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change background on mouse-over */
+.navbar a:hover {
+  background: #ccc;
+  color: black;
+}
+
+.image-wrapper {
+  width: 100%;
+}
+
+.tttimage {
+  margin-top: 30px;
+  width: 120px;
+}
+
+.navigation-wrapper {
+  margin-top: 30px;
+  width: 100%;
+}
  
+
+/* The sidebar menu */
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 240px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #333; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+
+.sidenav .nav-item {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 4px 2px;
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.sunglasses-img {
+  margin-top: 12px;
+  display: grid;
+  height: 50px;
+}
+
+.restart-btn-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.restart-btn {
+  position: relative;
+  top: 0px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  text-decoration: none;
+  font-size: 25px;
+  background: #f7f7f7;
+  padding: 15px 50px;
+  border: 1px solid #c4c4c4;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 5px 0px #c4c4c4;
+  -moz-box-shadow: 0px 5px 0px #c4c4c4;
+  -ms-box-shadow: 0px 5px 0px #c4c4c4;
+  -o-box-shadow: 0px 5px 0px #c4c4c4;
+  box-shadow: 0px 5px 0px #c4c4c4;
+  color: #222;
+  text-shadow: 1px 1px 1px #fff;
+  -webkit-transition: All 250ms ease;
+  -moz-transition: All 250ms ease;
+  -o-transition: All 250ms ease;
+  -ms-transition: All 250ms ease;
+  transition: All 250ms ease;
+}
+/*==========  Active State  ==========*/
+.restart-btn:active {
+  position: relative;
+  top: 5px;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -ms-box-shadow: none !important;
+  -o-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-transition: All 250ms ease;
+  -moz-transition: All 250ms ease;
+  -o-transition: All 250ms ease;
+  -ms-transition: All 250ms ease;
+  transition: All 250ms ease;
+}
+
+.restart-btn.navy {
+  background: #1b486d;
+  border: 1px solid #07121b;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 5px 0px #07121b;
+  -moz-box-shadow: 0px 5px 0px #07121b;
+  -ms-box-shadow: 0px 5px 0px #07121b;
+  -o-box-shadow: 0px 5px 0px #07121b;
+  box-shadow: 0px 5px 0px #07121b;
+  color: #fff;
+  text-shadow: 1px 1px 1px #07121b;
+}
+
+
+/* About Section */
+.about {
+  margin-top: 100px;
+  margin-left: 300px;
+}
+
+
+
+
