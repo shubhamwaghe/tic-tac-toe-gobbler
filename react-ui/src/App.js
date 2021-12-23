@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Navbar from './components/section/Navbar';
 import SideNav from './components/section/SideNav';
-import Game from './components/Game';
 import GobblerGame from './components/GobblerGame';
 import About from './components/section/About';
 import { Route, Routes } from 'react-router-dom';
@@ -10,6 +9,7 @@ import './App.css';
 
 function App() {
   const [message, setMessage] = useState(null);
+  const [gamesPlayed, setGamesPlayed] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const [url, setUrl] = useState('/api');
 
@@ -23,6 +23,7 @@ function App() {
       })
       .then(json => {
         setMessage(json.message);
+        setGamesPlayed(json.gamesPlayed);
         setIsFetching(false);
       }).catch(e => {
         setMessage(`API call failed: ${e}`);
@@ -43,7 +44,7 @@ function App() {
       <SideNav />
         <Routes>
           <Route path="/" element={ <KeepAlive name="GobblerGame"><GobblerGame /></KeepAlive> } />
-          <Route path="/about" element={ <About/> } />
+          <Route path="/about" element={ <About gamesPlayed={gamesPlayed} /> } />
         </Routes>
     </div>
   );

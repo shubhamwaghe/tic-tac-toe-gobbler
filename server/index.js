@@ -20,6 +20,8 @@ var PLAYER_INFO = {
     playerName: null
   }
 }
+
+// Not being Used
 function getInitialState() {
   return [{
     move: "GAME START",
@@ -43,7 +45,7 @@ function resetPlayerInfo(playerColor) {
   }
 }
 
-
+var GAME_STATS = []
 
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
@@ -70,15 +72,15 @@ if (!isDev && cluster.isMaster) {
   // Answer API requests.
   app.get('/api', function (req, res) {
     res.set('Content-Type', 'application/json');
-    res.send('{"message":"Hello from the custom server!"}');
+    res.send(`{"message":"Hello from Server!", "gamesPlayed": ${GAME_STATS.length}}`);
   });
 
   /* Sockets Code */
   //Whenever someone connects this gets executed
   io.on('connection', function(socket) {
     console.log('A User Connected!', socket.id);
-    console.log(PLAYER_INFO);
-    socket.join('channel-1');
+    // console.log(PLAYER_INFO);
+    socket.join('global-channel');
     if (PLAYER_INFO['B']['joined']) {
       socket.emit('join-channel-notification', {
         'color': 'B',
@@ -98,13 +100,13 @@ if (!isDev && cluster.isMaster) {
       console.log('A User Disconnected!', socket.id);
       var colorLeft = null; var leftPlayerName = null;
       if (PLAYER_INFO['B']['socketId'] === socket.id) {
-        socket.broadcast.in('channel-1').emit('left-channel-notification', {
+        socket.broadcast.in('global-channel').emit('left-channel-notification', {
           color: 'B',
           playerName: PLAYER_INFO['B']['playerName']
         }); 
         resetPlayerInfo('B');
       } else if (PLAYER_INFO['R']['socketId'] === socket.id) {
-        socket.broadcast.in('channel-1').emit('left-channel-notification', {
+        socket.broadcast.in('global-channel').emit('left-channel-notification', {
           color: 'R',
           playerName: PLAYER_INFO['B']['playerName']
         }); 
@@ -119,8 +121,9 @@ if (!isDev && cluster.isMaster) {
       var playerName = data.playerName;
       if (!PLAYER_INFO[playerColor]['joined']) {
         PLAYER_INFO[playerColor] = { joined: true, playerName: playerName, socketId: socket.id }
-        socket.broadcast.in('channel-1').emit('join-channel-notification', data); 
+        socket.broadcast.in('global-channel').emit('join-channel-notification', data); 
         socket.emit('join-channel-notification', data);
+        socket.join('channel-1');
 
         /* Resume Play if second join */
         // if (GAME_MOVES.length > 1) {
@@ -130,12 +133,12 @@ if (!isDev && cluster.isMaster) {
         //   GAME_MOVES = getInitialState();
         // }
       } else {
-        socket.leave('channel-1');
+        socket.leave('global-channel');
         socket.emit('force-offline', {
           'message': `${PLAYER_INFO[playerColor]['playerName']} has already joined as Color: ${PLAYER_INFO[playerColor]['playerName']}`
         });
       }
-      console.log(PLAYER_INFO);
+      // console.log(PLAYER_INFO);
     });
 
     socket.on('move-piece', function (data) {
@@ -148,7 +151,30 @@ if (!isDev && cluster.isMaster) {
       if (PLAYER_INFO[playerColor][socketId] === socket.id) {
         resetPlayerInfo(playerColor);
       }
-      socket.leave('channel-1');
+      socket.leave('global-channel');
+    });
+
+    socket.on('game-restart-request', function(data) {
+      socket.broadcast.in('channel-1').emit('game-restart-request', data); 
+    });
+
+    socket.on('game-restart-request-accepted', function(data) {
+      // I know this can be one-liner :\
+      socket.broadcast.in('channel-1').emit('game-restart-request-accepted', data); 
+      socket.emit('game-restart-request-accepted', data); 
+    });
+
+    socket.on('game-restart-request-rejected', function(data) {
+      socket.broadcast.in('channel-1').emit('game-restart-request-rejected', data); 
+      socket.emit('game-restart-request-rejected', data); 
+    });
+
+    socket.on('game-over', function(data) {
+      var winnerPlayer = data.winnerPlayer;
+      var playerNames = data.playerNames;
+      var gameResult = { playerNames: playerNames, winnerPlayer: winnerPlayer }
+      GAME_STATS.push(gameResult);
+      console.log(gameResult);
     });
 
 

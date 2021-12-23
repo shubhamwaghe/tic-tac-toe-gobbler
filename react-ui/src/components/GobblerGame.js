@@ -4,6 +4,7 @@ import GobblerBoard from './GobblerBoard';
 import GameMoveListBox from './GameMoveListBox';
 import GameNextStepBox from './GameNextStepBox';
 import PlayerWelcomeModal from './PlayerWelcomeModal';
+import GameRestartModal from './GameRestartModal';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
     assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
@@ -22,6 +23,8 @@ export default class GobblerGame extends Component {
             playerJoined: { 'B': false, 'R': false },
             winnerPlayer: null,
             gameOver: false,
+            gameRestartModalShow: false,
+            gameRestartRequestColor: null,
             history: [{
                     move: "GAME START",
                     squares: { 
@@ -120,6 +123,13 @@ export default class GobblerGame extends Component {
                 autoClose: 5000,
             });
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
+
+            if (this.state.myColor === winnerPlayer) {
+                this.socket.emit('game-over', {
+                    winnerPlayer: winnerPlayer,
+                    playerNames: this.state.playerNames
+                });  
+            }
         }
 
     }
@@ -166,12 +176,46 @@ export default class GobblerGame extends Component {
         });
     }
 
-    restartGame() {
-        toast.info('Game Restarted!', {
-            position: "top-right",
-            autoClose: 1500,
-        });
-        this.setState(this.getInitialState());
+    restartGame(restartRequest = false) {
+        if (this.state.myColor === null || restartRequest) {
+            // Player if playing offline or Game Restart Request Accepted
+            toast.info('Game Restarted!', {
+                position: "top-right",
+                autoClose: 1500,
+            });
+            var myColor = null, playerJoined = null, playerNames = null;
+            if (restartRequest) {
+                myColor = this.state.myColor;
+                playerJoined = this.state.playerJoined;
+                playerNames = this.state.playerNames;
+            }
+            this.setState(this.getInitialState());
+            if (restartRequest) {
+                this.setState({ myColor : myColor, playerJoined: playerJoined, playerNames: playerNames });
+            }
+        } else {
+            this.socket.emit('game-restart-request', {
+                "requestColor": this.state.myColor
+            });
+            toast.info('Game Restart Request Sent!', {
+                position: "top-right",
+                autoClose: 2000,
+            });
+        }
+    }
+
+    handleGameRestartRequest(requestColor) {
+        this.setState({ gameRestartModalShow: true, gameRestartRequestColor: requestColor });
+    }
+
+    acceptGameRestartRequest() {
+        this.socket.emit('game-restart-request-accepted')
+        this.setState({ gameRestartModalShow: false, gameRestartRequestColor: null });
+    }
+
+    rejectGameRestartRequest() {
+        this.socket.emit('game-restart-request-rejected')
+        this.setState({ gameRestartModalShow: false, gameRestartRequestColor: null });
     }
 
     forceOffline() {
@@ -197,9 +241,22 @@ export default class GobblerGame extends Component {
             self.handlePlayerLeft(color, playerName)
         });
 
+        this.socket.on('game-restart-request', function({ requestColor }){
+            console.log(requestColor);
+            self.handleGameRestartRequest(requestColor);
+        });
+
         this.socket.on('force-offline', function({ message }){
             self.infoUser(message);
             self.forceOffline();
+        });
+
+        this.socket.on('game-restart-request-accepted', function(data) {
+            self.restartGame(true);
+        });
+
+        this.socket.on('game-restart-request-rejected', function(data) {
+            self.infoUser("Game Restart Request rejected!");
         });
 
         // this.socket.on('patch-game-state', function({ history }){
@@ -249,12 +306,19 @@ export default class GobblerGame extends Component {
 
         return (
             <div>
+                <GameRestartModal gameRestartModalShow={this.state.gameRestartModalShow} 
+                gameRestartRequestColor={this.state.gameRestartRequestColor} 
+                playerNames={this.state.playerNames} 
+                acceptGameRestartRequest={() => this.acceptGameRestartRequest()}
+                rejectGameRestartRequest={() => this.rejectGameRestartRequest()}/>
+
                 <PlayerWelcomeModal playerNames={this.state.playerNames} 
                 playerJoined={this.state.playerJoined}
                 setPlayerName={(color, playerName) => this.setPlayerName(color, playerName)} 
                 joinBluePlayer={(bluePlayerName) => this.joinBluePlayer(bluePlayerName)} 
                 joinRedPlayer={(redPlayerName) => this.joinRedPlayer(redPlayerName)} 
                 playOffline={() => this.playOffline()} />
+
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
                 <div className="game">

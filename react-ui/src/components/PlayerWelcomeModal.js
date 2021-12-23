@@ -58,9 +58,9 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
                 show={open}
                 backdrop="static"
                 keyboard={false}
-                aria-labelledby="ModalHeader">
+                aria-labelledby="WelcomeModalHeader">
                 <Modal.Header closeButton>
-                    <Modal.Title id='ModalHeader'>Welcome to Tic Tac Toe - Gobbler!!</Modal.Title>
+                    <Modal.Title id='WelcomeModalHeader'>Welcome to Tic Tac Toe - Gobbler!!</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
