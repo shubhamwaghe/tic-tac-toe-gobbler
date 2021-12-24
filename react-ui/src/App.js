@@ -3,6 +3,7 @@ import Navbar from './components/section/Navbar';
 import SideNav from './components/section/SideNav';
 import GobblerGame from './components/GobblerGame';
 import About from './components/section/About';
+import GameStats from './components/section/GameStats';
 import { Route, Routes } from 'react-router-dom';
 import { KeepAlive } from 'react-keep-alive';
 import './App.css';
@@ -10,11 +11,11 @@ import './App.css';
 function App() {
   const [message, setMessage] = useState(null);
   const [gamesPlayed, setGamesPlayed] = useState(null);
-  const [isFetching, setIsFetching] = useState(false);
-  const [url, setUrl] = useState('/api');
+  const [gameStats, setGameStats] = useState([]);
+  const [gameStatsUrl, setGameStatsUrl] = useState('/game-stats');
 
-  const fetchData = useCallback(() => {
-    fetch(url)
+  const fetchGameStats = useCallback(() => {
+    fetch(gameStatsUrl)
       .then(response => {
         if (!response.ok) {
           throw new Error(`status ${response.status}`);
@@ -22,19 +23,18 @@ function App() {
         return response.json();
       })
       .then(json => {
+        console.log(json.gameStats);
         setMessage(json.message);
         setGamesPlayed(json.gamesPlayed);
-        setIsFetching(false);
+        setGameStats(json.gameStats);
       }).catch(e => {
         setMessage(`API call failed: ${e}`);
-        setIsFetching(false);
       })
-  }, [url]);
+  }, [gameStatsUrl]);
 
   useEffect(() => {
-    setIsFetching(true);
-    fetchData();
-  }, [fetchData]);
+    fetchGameStats();
+  }, [fetchGameStats]);
 
   return (
     <div className="App">
@@ -45,6 +45,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <KeepAlive name="GobblerGame"><GobblerGame /></KeepAlive> } />
           <Route path="/about" element={ <About gamesPlayed={gamesPlayed} /> } />
+          <Route path="/game-stats" element={ <GameStats gameStats={gameStats} /> } />
         </Routes>
     </div>
   );
