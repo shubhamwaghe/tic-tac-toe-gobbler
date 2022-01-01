@@ -42,6 +42,11 @@
   padding: 0px 6px;
 }
 
+.or-image {
+  height: 50px;
+  opacity: 0.9;
+}
+
 /* Grid */
 .grid-container {
   display: grid;
@@ -211,9 +216,35 @@
   box-sizing: border-box;
 }
 
+.horizontal-wrapper {
+  display: flex;
+}
+
+.join-section {
+  /*width: 60%;  */
+}
+
+.or-section {
+  width: 12%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offline-section {
+  width: 30%;
+  display: flex;
+}
+
+.play-offline-btn {
+  margin-top: 12px;
+  font-size: initial !important;
+}
+
 .btn {
     display: inline-block;
     margin-bottom: 0;
+    width: 165px;
     font-weight: normal;
     text-align: center;
     white-space: nowrap;
