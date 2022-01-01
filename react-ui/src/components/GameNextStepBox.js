@@ -12,6 +12,7 @@ export default function GameMoveListBox({ gameOver, winnerPlayer, playerToMove, 
     if (gameOver) {
         return(
             <div align="center" className="info-player">
+            <span className="player-name-span">Blue: <b>{playerNames['B']}</b>, Red: <b>{playerNames['R']}</b></span><br/>
                 <b>{getFullColorName(winnerPlayer)} : {playerNames[winnerPlayer]} </b> Wins!!!
                 <img src={sunglasses} className="sunglasses-img"  alt="Sunglasses"/>
             </div>

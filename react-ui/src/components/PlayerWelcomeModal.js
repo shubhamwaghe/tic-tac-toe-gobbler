@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-bootstrap-modal'
 import happyemoji from '../img/happy-emoji.png'
+import orimage from '../img/or-image.png'
 
 import 'react-bootstrap-modal/lib/css/rbm-complete.css';
 
@@ -67,26 +68,38 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
                     <h3>Join Channel</h3>
                     <div>Blue Player Plays First :)</div>
                     <div>
-                        <div>
-                            <input className="join-input-box" placeholder="Enter Your Name" 
-                            value={playerNames['B']} onChange={evt => updateBluePlayerName(evt)} disabled={playerJoined['B']} />
-                            <button type="submit" className='btn join-button blue-join-button' 
-                            onClick={() => joinBluePlayerBtn()} disabled={playerJoined['B']}>
-                                <b>Join as BLUE Player</b>
-                            </button>
-                            <div className={`error-message ${!bluePlayerErrorDisplay ? 'hidden' : undefined }`}>
-                                <span><small><i>Name : Blue Player Name is Required!</i></small></span>
+                        <div className="horizontal-wrapper">
+                            <div className="join-section">
+                                <div>
+                                    <input className="join-input-box" placeholder="Enter Your Name" 
+                                    value={playerNames['B']} onChange={evt => updateBluePlayerName(evt)} disabled={playerJoined['B']} />
+                                    <button type="submit" className='btn join-button blue-join-button' 
+                                    onClick={() => joinBluePlayerBtn()} disabled={playerJoined['B']}>
+                                        <b>Join as BLUE Player</b>
+                                    </button>
+                                    <div className={`error-message ${!bluePlayerErrorDisplay ? 'hidden' : undefined }`}>
+                                        <span><small><i>Name : Blue Player Name is Required!</i></small></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input className="join-input-box" placeholder="Enter Your Name" 
+                                    value={playerNames['R']} onChange={evt => updateRedPlayerName(evt)} disabled={playerJoined['R']} />
+                                    <button type="submit" className='btn join-button red-join-button' 
+                                    onClick={() => joinRedPlayerBtn()} disabled={playerJoined['R']} >
+                                        <b>Join as RED Player</b>
+                                    </button>
+                                    <div className={`error-message ${!redPlayerErrorDisplay ? 'hidden' : undefined }`}>
+                                        <span><small><i>Name : Red Player Name is Required!</i></small></span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <input className="join-input-box" placeholder="Enter Your Name" 
-                            value={playerNames['R']} onChange={evt => updateRedPlayerName(evt)} disabled={playerJoined['R']} />
-                            <button type="submit" className='btn join-button red-join-button' 
-                            onClick={() => joinRedPlayerBtn()} disabled={playerJoined['R']} >
-                                <b>Join as RED Player</b>
-                            </button>
-                            <div className={`error-message ${!redPlayerErrorDisplay ? 'hidden' : undefined }`}>
-                                <span><small><i>Name : Red Player Name is Required!</i></small></span>
+                            <div className="or-section">
+                                <img src={orimage} className="or-image" alt="OR Image" />
+                            </div>
+                            <div className="offline-section">
+                                <button className='btn btn-success play-offline-btn' onClick={() => saveAndClose()}>
+                                    <b>Play Offline</b>
+                                </button>
                             </div>
                         </div>
                     </div>

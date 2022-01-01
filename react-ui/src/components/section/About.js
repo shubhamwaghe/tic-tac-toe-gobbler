@@ -6,8 +6,8 @@ export default class About extends Component {
             <div className="about">
                 <section>
                     <h1>About</h1>
-                    <p>About Section</p>
-                    <p>Total Games Played : <b>{this.props.gamesPlayed}</b></p>
+                    <h4>Game Launch Date: 31st December 2021</h4>
+                    {/*<p>Total Games Played : <b>{this.props.gamesPlayed}</b></p>*/}
 
                 </section>
             </div>
