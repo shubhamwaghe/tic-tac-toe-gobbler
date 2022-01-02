@@ -234,10 +234,10 @@
 .offline-section {
   width: 30%;
   display: flex;
+  align-items: center;
 }
 
 .play-offline-btn {
-  margin-top: 12px;
   font-size: initial !important;
 }
 

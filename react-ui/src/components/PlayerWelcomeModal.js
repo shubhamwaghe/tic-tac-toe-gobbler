@@ -94,7 +94,7 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
                                 </div>
                             </div>
                             <div className="or-section">
-                                <img src={orimage} className="or-image" alt="OR Image" />
+                                <img src={orimage} className="or-image" alt="OR Button" />
                             </div>
                             <div className="offline-section">
                                 <button className='btn btn-success play-offline-btn' onClick={() => saveAndClose()}>

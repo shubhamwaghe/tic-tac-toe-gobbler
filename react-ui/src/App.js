@@ -12,7 +12,7 @@ function App() {
   const [message, setMessage] = useState(null);
   const [gamesPlayed, setGamesPlayed] = useState(null);
   const [gameStats, setGameStats] = useState([]);
-  const [gameStatsUrl, setGameStatsUrl] = useState('/game-stats');
+  const [gameStatsUrl, setGameStatsUrl] = useState('/api/game-stats');
 
   const fetchGameStats = useCallback(() => {
     fetch(gameStatsUrl)
@@ -45,7 +45,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <KeepAlive name="GobblerGame"><GobblerGame /></KeepAlive> } />
           <Route path="/about" element={ <About gamesPlayed={gamesPlayed} /> } />
-          <Route path="/game-stats" element={ <GameStats gameStats={gameStats} /> } />
+          <Route path="/game-stats" element={ <GameStats gameStats={gameStats} gamesPlayed={gamesPlayed} /> } />
         </Routes>
     </div>
   );

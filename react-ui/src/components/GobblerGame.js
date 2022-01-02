@@ -125,10 +125,11 @@ export default class GobblerGame extends Component {
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
 
             if (this.state.myColor === winnerPlayer) {
-                this.socket.emit('game-over', {
-                    winnerPlayer: winnerPlayer,
-                    playerNames: this.state.playerNames
-                });  
+                // this.socket.emit('game-over', {
+                //     winnerPlayer: winnerPlayer,
+                //     playerNames: this.state.playerNames
+                // });  
+                this.socket.emit('game-over', this.state);
             }
         }
 
