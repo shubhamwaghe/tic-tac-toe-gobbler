@@ -189,7 +189,7 @@ io.on('connection', function(socket) {
     var gameResult = { playerNames: data.playerNames, winnerPlayer: data.winnerPlayer }
     GAME_STATS.push(gameResult);
     console.log(gameResult);
-    if (GAME_LOGGING) saveGame(data);
+    if (GAME_LOGGING === true) saveGame(data);
   });
 
 
