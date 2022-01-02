@@ -63,7 +63,12 @@ function saveGame(game) {
 
     try {
       // Insert Game State
-      gobblerGamesCollection.insertOne(game);
+      var gameModel = game;
+      const gameTime = new Date();
+      gameModel["winnerPlayerName"] = game.playerNames[game.winnerPlayer];
+      gameModel["gameDate"] = gameTime.toISOString().slice(0,10);
+      gameModel["gameTime"] = gameTime.toString();
+      gobblerGamesCollection.insertOne(gameModel);
     } catch (error) {
       console.log(`Error : ${error}`); // Log Error and Ignore
       return "SAVE_FAILURE";
@@ -188,8 +193,10 @@ io.on('connection', function(socket) {
   socket.on('game-over', function(data) {
     var gameResult = { playerNames: data.playerNames, winnerPlayer: data.winnerPlayer }
     GAME_STATS.push(gameResult);
-    console.log(gameResult);
-    if (GAME_LOGGING === true) saveGame(data);
+    if (GAME_LOGGING == "true") {
+      console.log("Saving Game: ", gameResult);
+      saveGame(data);
+    }
   });
 
 
