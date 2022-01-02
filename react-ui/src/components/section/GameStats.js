@@ -6,6 +6,7 @@ export default class GameStats extends Component {
             <div className="game-stats">
                 <section>
                     <h1>Game Statistics</h1>
+                    <p>Total Games Played : <b>{this.props.gamesPlayed}</b></p>
                     <p>Games Stats : <b></b></p>
                     <ol>
                         {
