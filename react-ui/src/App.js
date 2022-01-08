@@ -12,6 +12,7 @@ import './App.css';
 
 function initialiseAnalytics() {
   const TRACKING_ID = process.env.REACT_APP_GA_ID;
+  console.log(TRACKING_ID);
   ReactGA.initialize(TRACKING_ID);
 }
 
