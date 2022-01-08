@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import Navbar from './components/section/Navbar';
 import SideNav from './components/section/SideNav';
 import GobblerGame from './components/GobblerGame';
@@ -6,9 +7,32 @@ import About from './components/section/About';
 import GameStats from './components/section/GameStats';
 import { Route, Routes } from 'react-router-dom';
 import { KeepAlive } from 'react-keep-alive';
+import ReactGA from 'react-ga';
 import './App.css';
 
+function initialiseAnalytics() {
+  const TRACKING_ID = process.env.REACT_APP_GA_ID;
+  ReactGA.initialize(TRACKING_ID);
+}
+
+function usePageTracking() {
+  const location = useLocation();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    initialiseAnalytics();
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      ReactGA.pageview(location.pathname + location.search);
+    }
+  }, [initialized, location]);
+}
+
 function App() {
+  usePageTracking();
   const [message, setMessage] = useState(null);
   const [gamesPlayed, setGamesPlayed] = useState(null);
   const [gameStats, setGameStats] = useState([]);
@@ -23,7 +47,6 @@ function App() {
         return response.json();
       })
       .then(json => {
-        console.log(json.gameStats);
         setMessage(json.message);
         setGamesPlayed(json.gamesPlayed);
         setGameStats(json.gameStats);
