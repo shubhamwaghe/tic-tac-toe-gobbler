@@ -189,6 +189,7 @@
 
 .blue-join-button {
   background-color: #2c88d9;
+  margin-bottom: 6px;
   color: white;
 }
 
@@ -198,6 +199,7 @@
 
 .red-join-button {
   background-color: #d3445b;
+  margin-bottom: 6px;
   color: white;
 }
 
@@ -207,7 +209,8 @@
 
 .join-input-box {
   padding: 10px;
-  margin-top: 12px;
+  margin-bottom: 6px;
+  margin-top: 6px;
   width: 300px;
   margin-right: 12px;
   display: inline-block;
@@ -221,7 +224,7 @@
 }
 
 .join-section {
-  /*width: 60%;  */
+  margin-top: 12px;
 }
 
 .or-section {
@@ -318,11 +321,6 @@
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
 }
-
-.navbar-wrapper {
-  margin-left: 240px;
-}
-
 
 /* Links inside the navbar */
 .navbar a {
@@ -473,6 +471,13 @@
 .game-stats {
   margin-top: 100px;
   margin-left: 300px;
+}
+
+@media (max-width: 767px) {
+  .hidden-xs {
+    display: none;
+  }
+
 }
 
 

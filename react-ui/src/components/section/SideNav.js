@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default class SideNav extends Component {
     render() {
         return(
-            <div className="sidenav">
+            <div className="sidenav hidden-xs">
                 <div className="image-wrapper" align="center">
                     <img src={tttimage} className="tttimage" alt="Gobbler Logo" />
                 </div>
