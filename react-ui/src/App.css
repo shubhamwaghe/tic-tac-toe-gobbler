@@ -473,13 +473,63 @@
   margin-left: 300px;
 }
 
-@media (max-width: 767px) {
+.player-label-xs {
+  display: none;
+}
+
+.game-next-steps-mini {
+  display: none;
+}
+
+.game-info-xs {
+  display: none;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  padding: 10px;
+}
+
+.action-image-xs {
+  width: 25px;
+}
+
+@media (max-width: 768px) {
   .hidden-xs {
     display: none;
   }
 
+  .visible-xs {
+    display: block;
+  }
+
+  .game-info-visible-xs {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .restart-btn-xs {
+    padding: 10px 12px;
+    font-size: initial;
+  }
+
+  .game-xs {
+    left: auto;
+    top: auto;
+    padding: 0;
+    margin: 0;
+    transform: initial;
+  }
+
+  .sunglasses-img-xs {
+    height: 18px;
+    margin: auto;
+    margin-left: 4px;
+    display: initial;
+  }
+
+  .game-board-xs {
+    transform:  scale(0.8) translateX(-10%);
+  }
+
 }
-
-
-
-

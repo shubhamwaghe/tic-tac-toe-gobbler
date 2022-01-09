@@ -3,7 +3,9 @@ import socketClient  from "socket.io-client";
 import GobblerBoard from './GobblerBoard';
 import GameMoveListBox from './GameMoveListBox';
 import GameNextStepBox from './GameNextStepBox';
+import GameNextStepsMiniBox from './GameNextStepsMiniBox';
 import PlayerWelcomeModal from './PlayerWelcomeModal';
+import PlayerLabel from './PlayerLabel';
 import GameRestartModal from './GameRestartModal';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
@@ -11,6 +13,8 @@ import { assertMovableFromPiecePosition, assertMovableToPiecePosition,
 import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import restart from '../img/restart.png'
 
 export default class GobblerGame extends Component {
 
@@ -322,14 +326,18 @@ export default class GobblerGame extends Component {
 
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
-                <div className="game">
-                    <div className="game-board">
+                <div className="game game-xs">
+                    <div className="game-board game-board-xs">
+                        <PlayerLabel playerColorLabel='R' myColor={this.state.myColor} playerNames={this.state.playerNames} />
                         <GobblerBoard squares={current.squares}
                             movePiece={(pieceColor, pieceName, currentPosition, targetPosition) => 
                                 this.movePiece(pieceColor, pieceName, currentPosition, targetPosition)}
                          />
+                        <PlayerLabel playerColorLabel='B' myColor={this.state.myColor} playerNames={this.state.playerNames} />
+                        <GameNextStepsMiniBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
+                            playerToMove={this.getPlayerToMove()} playerNames={this.state.playerNames} />
                     </div>
-                    <div className="game-info">
+                    <div className="game-info hidden-xs">
                         <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
                             playerToMove={this.getPlayerToMove()} playerNames={this.state.playerNames} />
                         <div className="info-move"> 
@@ -341,6 +349,11 @@ export default class GobblerGame extends Component {
                         <div className="restart-btn-wrapper">
                             <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
                         </div>
+                    </div>
+                    <div className="game-info-xs game-info-visible-xs">
+                        <button className="restart-btn restart-btn-xs navy" onClick={() => this.restartGame()}>
+                            <img src={restart} className="action-image-xs"  alt="Restart Game"/>
+                        </button>
                     </div>
                 </div>
             </div>
