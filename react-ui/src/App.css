@@ -504,7 +504,12 @@
   }
 
   .visible-xs {
-    display: block;
+    display: block !important;
+  }
+
+  .join-channel-xs {
+    margin: 0;
+    display: block !important; 
   }
 
   .game-info-visible-xs {

@@ -65,8 +65,9 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
                 </Modal.Header>
 
                 <Modal.Body>
-                    <h3>Join Channel</h3>
-                    <div>Blue Player Plays First :)</div>
+                    <h4 style={{display: 'none' }} className="join-channel-xs">Join Channel : Blue Plays First :)</h4>
+                    <h3 className="hidden-xs">Join Channel</h3>
+                    <div className="hidden-xs">Blue Player Plays First :)</div>
                     <div>
                         <div className="horizontal-wrapper">
                             <div className="join-section">
@@ -108,15 +109,15 @@ export default function PlayerWelcomeModal({ playerNames, playerJoined, setPlaye
                         Just as with tic-tac-toe, you need to try and get three of your pieces in a 
                         row without any interceptions from your opponent. 
                     </p>
-                    <p>
-                        Unlike tic-tac-toe, you can <b><i>Gobble</i></b> your opponent's pieces to claim the spot 
+                    <p className="hidden-xs">
+                        Unlike tic-tac-toe, you can <b><i>Gobble</i></b> your opponent's smaller pieces to claim the spot 
                         on the grid as your own!
                     </p>
 
                     <p>You can gobble up any smaller size Gobbler </p>
-                    <p>It does not have to be the next size down </p>
+                    <p className="hidden-xs">It does not have to be the next size down </p>
                     <h4>The first player to align 3 pieces wins!</h4>
-                    <p>So when you wish to move a piece try to remember what is under it!</p>
+                    <p className="hidden-xs">So when you wish to move a piece try to remember what is under it!</p>
 
                     <h1 className="flex-box">
                         Enjoy the Game!! 
