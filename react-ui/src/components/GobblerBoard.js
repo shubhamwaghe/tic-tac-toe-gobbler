@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Piece from './Piece';
 import PieceContainer from './PieceContainer';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+// import { DndProvider } from 'react-dnd'
+import { DndProvider } from 'react-dnd-multi-backend';
+import HTML5toTouch from 'react-dnd-multi-backend/dist/esm/HTML5toTouch';
 
 export default class GobblerBoard extends Component {
 
@@ -16,7 +17,7 @@ export default class GobblerBoard extends Component {
 
         return (
             <div>
-            <DndProvider backend={HTML5Backend}>
+            <DndProvider options={HTML5toTouch}>
                 { /* Red Ground */ }
                 <div className="red-piece-ground">
                     <PieceContainer name = "RED_GROUND" pieces = { this.renderContainerPieces('RED_GROUND') } 

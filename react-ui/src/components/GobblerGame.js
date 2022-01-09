@@ -3,7 +3,9 @@ import socketClient  from "socket.io-client";
 import GobblerBoard from './GobblerBoard';
 import GameMoveListBox from './GameMoveListBox';
 import GameNextStepBox from './GameNextStepBox';
+import GameNextStepsMiniBox from './GameNextStepsMiniBox';
 import PlayerWelcomeModal from './PlayerWelcomeModal';
+import PlayerLabel from './PlayerLabel';
 import GameRestartModal from './GameRestartModal';
 import calculateWinner from './util/WinnerCheckUtil'
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
@@ -11,6 +13,11 @@ import { assertMovableFromPiecePosition, assertMovableToPiecePosition,
 import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import info from '../img/info.png'
+import undo from '../img/undo.png'
+import redo from '../img/redo.png'
+import restart from '../img/restart.png'
 
 export default class GobblerGame extends Component {
 
@@ -177,6 +184,15 @@ export default class GobblerGame extends Component {
         });
     }
 
+    gotoPreviousMove() {
+        console.log("Click");
+        this.timeTravelMove(this.state.visibleStepNumber - 1);
+    }
+
+    gotoNextMove() {
+        this.timeTravelMove(this.state.visibleStepNumber + 1);
+    }
+
     restartGame(restartRequest = false) {
         if (this.state.myColor === null || restartRequest) {
             // Player if playing offline or Game Restart Request Accepted
@@ -322,14 +338,18 @@ export default class GobblerGame extends Component {
 
                 <ToastContainer autoClose={10000} hideProgressBar={false}
                 newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss />
-                <div className="game">
-                    <div className="game-board">
+                <div className="game game-xs">
+                    <div className="game-board game-board-xs">
+                        <PlayerLabel playerColorLabel='R' myColor={this.state.myColor} playerNames={this.state.playerNames} />
                         <GobblerBoard squares={current.squares}
                             movePiece={(pieceColor, pieceName, currentPosition, targetPosition) => 
                                 this.movePiece(pieceColor, pieceName, currentPosition, targetPosition)}
                          />
+                        <PlayerLabel playerColorLabel='B' myColor={this.state.myColor} playerNames={this.state.playerNames} />
+                        <GameNextStepsMiniBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
+                            playerToMove={this.getPlayerToMove()} playerNames={this.state.playerNames} />
                     </div>
-                    <div className="game-info">
+                    <div className="game-info hidden-xs">
                         <GameNextStepBox gameOver={this.state.gameOver} winnerPlayer={this.state.winnerPlayer}
                             playerToMove={this.getPlayerToMove()} playerNames={this.state.playerNames} />
                         <div className="info-move"> 
@@ -339,8 +359,24 @@ export default class GobblerGame extends Component {
                         </div>
 
                         <div className="restart-btn-wrapper">
-                            <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
+                            <button className="action-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
                         </div>
+                    </div>
+                    <div className="game-info-xs game-info-visible-xs">
+                        <button className="action-btn action-btn-xs navy">
+                            <img src={info} className="action-image-xs" alt="Info"/>
+                        </button>
+                        <button className={`action-btn action-btn-xs navy ${(this.state.stepNumber === 0) ? 'action-btn-disabled' : '' }`} 
+                            disabled={this.state.visibleStepNumber === 0}  onClick={() => this.gotoPreviousMove()}>
+                            <img src={undo} className="action-image-xs" alt="Show Last Move"/>
+                        </button>
+                        <button className={`action-btn action-btn-xs navy ${(this.state.stepNumber === this.state.visibleStepNumber) ? 'action-btn-disabled' : undefined }`} 
+                            disabled={this.state.stepNumber === this.state.visibleStepNumber}  onClick={() => this.gotoNextMove()}>
+                            <img src={redo} className="action-image-xs" alt="Show Next Move"/>
+                        </button>
+                        <button className="action-btn action-btn-xs navy" onClick={() => this.restartGame()}>
+                            <img src={restart} className="action-image-xs" alt="Restart Game"/>
+                        </button>
                     </div>
                 </div>
             </div>
