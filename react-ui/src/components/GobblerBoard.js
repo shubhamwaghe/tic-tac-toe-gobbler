@@ -4,7 +4,6 @@ import PieceContainer from './PieceContainer';
 // import { DndProvider } from 'react-dnd'
 import { DndProvider } from 'react-dnd-multi-backend';
 import HTML5toTouch from 'react-dnd-multi-backend/dist/esm/HTML5toTouch';
-import { HTML5Backend } from 'react-dnd-html5-backend'
 
 export default class GobblerBoard extends Component {
 

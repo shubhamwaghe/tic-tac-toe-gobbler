@@ -14,6 +14,9 @@ import { getMoveString, removeItem, getFullColorName } from './util/Miscellaneou
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import info from '../img/info.png'
+import undo from '../img/undo.png'
+import redo from '../img/redo.png'
 import restart from '../img/restart.png'
 
 export default class GobblerGame extends Component {
@@ -179,6 +182,15 @@ export default class GobblerGame extends Component {
             position: "top-right",
             autoClose: 3000,
         });
+    }
+
+    gotoPreviousMove() {
+        console.log("Click");
+        this.timeTravelMove(this.state.visibleStepNumber - 1);
+    }
+
+    gotoNextMove() {
+        this.timeTravelMove(this.state.visibleStepNumber + 1);
     }
 
     restartGame(restartRequest = false) {
@@ -347,12 +359,23 @@ export default class GobblerGame extends Component {
                         </div>
 
                         <div className="restart-btn-wrapper">
-                            <button className="restart-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
+                            <button className="action-btn navy" onClick={() => this.restartGame()}>RESTART GAME</button>
                         </div>
                     </div>
                     <div className="game-info-xs game-info-visible-xs">
-                        <button className="restart-btn restart-btn-xs navy" onClick={() => this.restartGame()}>
-                            <img src={restart} className="action-image-xs"  alt="Restart Game"/>
+                        <button className="action-btn action-btn-xs navy">
+                            <img src={info} className="action-image-xs" alt="Info"/>
+                        </button>
+                        <button className={`action-btn action-btn-xs navy ${(this.state.stepNumber === 0) ? 'action-btn-disabled' : '' }`} 
+                            disabled={this.state.visibleStepNumber === 0}  onClick={() => this.gotoPreviousMove()}>
+                            <img src={undo} className="action-image-xs" alt="Show Last Move"/>
+                        </button>
+                        <button className={`action-btn action-btn-xs navy ${(this.state.stepNumber === this.state.visibleStepNumber) ? 'action-btn-disabled' : undefined }`} 
+                            disabled={this.state.stepNumber === this.state.visibleStepNumber}  onClick={() => this.gotoNextMove()}>
+                            <img src={redo} className="action-image-xs" alt="Show Next Move"/>
+                        </button>
+                        <button className="action-btn action-btn-xs navy" onClick={() => this.restartGame()}>
+                            <img src={restart} className="action-image-xs" alt="Restart Game"/>
                         </button>
                     </div>
                 </div>

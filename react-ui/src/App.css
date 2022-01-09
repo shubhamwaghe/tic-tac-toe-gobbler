@@ -398,13 +398,13 @@
   height: 50px;
 }
 
-.restart-btn-wrapper {
+.action-btn-wrapper {
   height: 100%;
   display: flex;
   align-items: flex-end;
 }
 
-.restart-btn {
+.action-btn {
   position: relative;
   top: 0px;
   cursor: pointer;
@@ -431,7 +431,7 @@
   transition: All 250ms ease;
 }
 /*==========  Active State  ==========*/
-.restart-btn:active {
+.action-btn:active {
   position: relative;
   top: 5px;
   -webkit-box-shadow: none !important;
@@ -446,7 +446,7 @@
   transition: All 250ms ease;
 }
 
-.restart-btn.navy {
+.action-btn.navy {
   background: #1b486d;
   border: 1px solid #07121b;
   -webkit-border-radius: 5px;
@@ -493,6 +493,11 @@
   width: 25px;
 }
 
+.action-btn-disabled {
+  opacity: 0.9;
+  box-shadow: none !important;
+}
+
 @media (max-width: 768px) {
   .hidden-xs {
     display: none;
@@ -508,7 +513,8 @@
     flex-direction: column;
   }
 
-  .restart-btn-xs {
+  .action-btn-xs {
+    margin: 8px 0px;
     padding: 10px 12px;
     font-size: initial;
   }
