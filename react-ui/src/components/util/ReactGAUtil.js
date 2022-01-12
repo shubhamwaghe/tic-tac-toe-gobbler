@@ -27,4 +27,14 @@ function recordGameOverEvent(gameState) {
     });
 }
 
-export { recordGameOverEvent }
+function recordGameRestartEvent(gameOnline) {
+
+    var gameMode = (gameOnline) ? "ONLINE" : "OFFLINE";
+    ReactGA.event({
+        category: 'GAME',
+        action: 'GAME_RESTART',
+        label: gameMode
+    });
+}
+
+export { recordGameOverEvent, recordGameRestartEvent }
