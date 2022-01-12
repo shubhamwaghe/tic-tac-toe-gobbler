@@ -7,10 +7,11 @@ import GameNextStepsMiniBox from './GameNextStepsMiniBox';
 import PlayerWelcomeModal from './PlayerWelcomeModal';
 import PlayerLabel from './PlayerLabel';
 import GameRestartModal from './GameRestartModal';
-import calculateWinner from './util/WinnerCheckUtil'
+import calculateWinner from './util/WinnerCheckUtil';
+import { recordGameOverEvent } from './util/ReactGAUtil';
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
-    assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil'
-import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil'
+    assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil';
+import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -130,6 +131,7 @@ export default class GobblerGame extends Component {
                 autoClose: 5000,
             });
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
+            recordGameOverEvent(this.state);
 
             if (this.state.myColor === winnerPlayer) {
                 // this.socket.emit('game-over', {
