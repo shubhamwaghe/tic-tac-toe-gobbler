@@ -8,7 +8,7 @@ import PlayerWelcomeModal from './PlayerWelcomeModal';
 import PlayerLabel from './PlayerLabel';
 import GameRestartModal from './GameRestartModal';
 import calculateWinner from './util/WinnerCheckUtil';
-import { recordGameOverEvent } from './util/ReactGAUtil';
+import { recordGameOverEvent, recordGameRestartEvent } from './util/ReactGAUtil';
 import { assertMovableFromPiecePosition, assertMovableToPiecePosition, 
     assertMovableToSkipSquare, assertValidCurrentPlayer } from './util/ValidMoveAssertUtil';
 import { getMoveString, removeItem, getFullColorName } from './util/MiscellaneousUtil';
@@ -202,6 +202,7 @@ export default class GobblerGame extends Component {
                 position: "top-right",
                 autoClose: 1500,
             });
+            recordGameRestartEvent(restartRequest);
             var myColor = null, playerJoined = null, playerNames = null;
             if (restartRequest) {
                 myColor = this.state.myColor;
