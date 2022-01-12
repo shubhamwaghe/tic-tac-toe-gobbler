@@ -15,7 +15,7 @@ function recordGameOverEvent(gameState) {
     var redPlayerName = gameState.playerNames['R'];
     redPlayerName = (redPlayerName !== null & redPlayerName !== '') ? redPlayerName : "DEFAULT-RED";
     const winnerPlayerName = getWinnerPlayerName(gameState.winnerPlayer, bluePlayerName, redPlayerName);
-    
+
     ReactGA.event({
         category: 'GAME',
         action: 'GAME_OVER',
