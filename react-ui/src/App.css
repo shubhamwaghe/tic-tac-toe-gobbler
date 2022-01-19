@@ -392,7 +392,7 @@
   .sidenav a {font-size: 18px;}
 }
 
-.sunglasses-img {
+.win-emoji-img {
   margin-top: 12px;
   display: grid;
   height: 50px;
@@ -532,7 +532,7 @@
     transform: initial;
   }
 
-  .sunglasses-img-xs {
+  .win-emoji-img-xs {
     height: 18px;
     margin: auto;
     margin-left: 4px;

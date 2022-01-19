@@ -104,7 +104,7 @@ export default class GobblerGame extends Component {
         if (this.state.myColor === pieceColor) {
             this.emitMoveToPlayer(this.state.myColor, pieceName, currentPosition, targetPosition, moveObject);
         }
-        this.checkForWinner(nextSquareState);
+        this.checkForWinner(nextSquareState, emittedEventMove);
 
     }
 
@@ -123,21 +123,24 @@ export default class GobblerGame extends Component {
     }
 
 
-    checkForWinner(nextSquareState) {
+    checkForWinner(nextSquareState, emittedEventMove) {
         const winnerPlayer = calculateWinner(nextSquareState);
         if (winnerPlayer !== null) {
-            toast.success('We have a winner!', {
-                position: "top-right",
-                autoClose: 5000,
-            });
+            if (winnerPlayer === 'D') {
+                toast.success('It\'s a draw!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                });
+            } else {
+                toast.success('We have a winner!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                });
+            }
             this.setState({ gameOver: true, winnerPlayer: winnerPlayer });
             recordGameOverEvent(this.state);
 
-            if (this.state.myColor === winnerPlayer) {
-                // this.socket.emit('game-over', {
-                //     winnerPlayer: winnerPlayer,
-                //     playerNames: this.state.playerNames
-                // });  
+            if (!emittedEventMove) {
                 this.socket.emit('game-over', this.state);
             }
         }
