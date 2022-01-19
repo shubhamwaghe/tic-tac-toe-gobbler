@@ -16,6 +16,11 @@ export default function calculateWinner(squaresMap) {
         return squaresList;
     }
 
+    /***
+     * (6)  (7)  (8)
+     * (3)  (4)  (5)
+     * (0)  (1)  (2)
+    ***/
     const squares = transformToArrayRepresentation(squaresMap)
     const lines = [
         [0, 1, 2],
@@ -28,11 +33,16 @@ export default function calculateWinner(squaresMap) {
         [2, 4, 6]
     ];
 
+    const winnerSet = new Set();
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
-            return squares[a];
+            winnerSet.add(squares[a]);
         }
     }
-    return null;
+    switch(winnerSet.size) {
+        case 2: return "D";
+        case 1: return winnerSet.values().next().value;
+        default: return null;
+    }
 }
