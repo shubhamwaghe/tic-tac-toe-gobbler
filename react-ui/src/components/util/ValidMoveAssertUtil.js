@@ -9,6 +9,7 @@ function assertMovableFromPiecePosition(current, pieceName, currentPosition) {
 function assertMovableToPiecePosition(current, pieceName, targetPosition) {
     
     if (current.squares[targetPosition].length === 0 ) return true;
+    if(['BLUE_GROUND', 'RED_GROUND'].includes(targetPosition)) return false;
 
     const currentSizeTag = pieceName.substring(1,2); // Gives : 'S' / 'M' / 'L'
     const targetSizeTag = current.squares[targetPosition].at(-1).substring(1,2);
