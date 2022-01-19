@@ -82,7 +82,7 @@ export default class GobblerGame extends Component {
 
         if(!assertValidCurrentPlayer(pieceName, this.getPlayerToMove())) return this.alertUser('Illegal Move! Not Your Turn!');
         if(!assertMovableFromPiecePosition(current, pieceName, currentPosition)) return this.alertUser('Illegal Move! Invisible Piece!');
-        if(!assertMovableToPiecePosition(current, pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move over similar/larger piece!');
+        if(!assertMovableToPiecePosition(current, pieceName, targetPosition)) return this.alertUser('Illegal Move! Cannot move to target!');
         if(!assertMovableToSkipSquare(currentPosition, targetPosition)) return this.alertUser('Illegal Move! Cannot skip squares!');
 
         var nextSquareState = JSON.parse(JSON.stringify(current.squares));
