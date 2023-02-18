@@ -27,6 +27,9 @@ Includes a minimal [Node Cluster](https://nodejs.org/docs/latest-v8.x/api/cluste
 ##### With Backend (i.e Sockets)
 1. Render - [https://tic-tac-toe-gobbler.onrender.com/](https://tic-tac-toe-gobbler.onrender.com/)
 
+[Screenshot](https://imgur.com/CQcM6D5.jpg)
+
+
 ## Local Development
 
 Because this app is made of two npm projects, there are two places to run `npm` commands:
