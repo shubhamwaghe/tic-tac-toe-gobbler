@@ -7,7 +7,7 @@ import About from './components/section/About';
 import GameStats from './components/section/GameStats';
 import { Route, Routes } from 'react-router-dom';
 import { KeepAlive } from 'react-keep-alive';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import './App.css';
 
 function initialiseAnalytics() {
@@ -26,7 +26,7 @@ function usePageTracking() {
 
   useEffect(() => {
     if (initialized) {
-      ReactGA.pageview(location.pathname + location.search);
+      ReactGA.send({ hitType: "pageview", page: location.pathname + location.search });
     }
   }, [initialized, location]);
 }
