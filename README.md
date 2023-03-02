@@ -1,6 +1,7 @@
-# Tic Tac Toe Gobbler
+# Tic Tac Toe Gobbler (Gobblet Gobblers)
 
-A minimal example of using a Node backend (server for API, proxy, & routing) with a [React frontend](https://github.com/facebookincubator/create-react-app).
+Tic Tac Toe Gobbler is a variation of a classic Tic Tac Toe Game (Gobblet Gobblers)
+The frontend is implemented in ReactJs - Demo Available below
 
 * 📐 [Design Points](#user-content-design-points)
 * 🕺 [Demo](#user-content-demo)
