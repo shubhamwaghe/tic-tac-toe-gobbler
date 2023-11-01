@@ -3,12 +3,23 @@
 Tic Tac Toe Gobbler is a variation of a classic Tic Tac Toe Game (Gobblet Gobblers)
 The frontend is implemented in ReactJs - Demo Available below
 
-* 📐 [Design Points](#user-content-design-points)
 * 🕺 [Demo](#user-content-demo)
+* 📐 [Design Points](#user-content-design-points)
 * 💻 [Local Development](#user-content-local-development)
 
 To deploy a frontend-only React app, use the static-site optimized  
 ▶️ [create-react-app-buildpack](https://github.com/mars/create-react-app-buildpack)
+
+## Demo Links
+
+##### With Backend (i.e Sockets)
+1. Render - [https://tic-tac-toe-gobbler.onrender.com/](https://tic-tac-toe-gobbler.onrender.com/)
+
+##### Without Backend (Offline Only) [Internally, no server - Only React frontend]
+1. Netlify - [https://tic-tac-toe-gobbler.netlify.app/](https://tic-tac-toe-gobbler.netlify.app/)
+
+![Screenshot](https://imgur.com/CQcM6D5.jpg)
+
 
 ## Design Points
 
@@ -22,14 +33,6 @@ A combo of two npm projects, the backend server and the frontend UI. So there ar
       * module cache configured by `cacheDirectories`
 
 Includes a minimal [Node Cluster](https://nodejs.org/docs/latest-v8.x/api/cluster.html) [implementation](server/index.js) to parallelize the single-threaded Node process across the available CPU cores.
-
-## Demo Links
-
-##### With Backend (i.e Sockets)
-1. Render - [https://tic-tac-toe-gobbler.onrender.com/](https://tic-tac-toe-gobbler.onrender.com/)
-
-![Screenshot](https://imgur.com/CQcM6D5.jpg)
-
 
 ## Local Development
 
